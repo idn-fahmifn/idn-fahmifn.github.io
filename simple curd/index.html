@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Produk</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Katalog Produk</h1>
+        <a href="form.html" class="btn btn-primary">Tambah Produk Baru</a>
+      </header>
+
+      <main id="productList" class="product-grid"></main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const productList = document.getElementById("productList");
+        // Ambil data produk dari Local Storage atau gunakan array kosong
+        const products = JSON.parse(localStorage.getItem("products")) || [];
+
+        if (products.length === 0) {
+          productList.innerHTML =
+            "<p>Belum ada produk. Silakan tambahkan produk baru.</p>";
+          return;
+        }
+
+        // READ: Tampilkan setiap produk sebagai kartu
+        products.forEach((product) => {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <div class="card-body">
+                        <h3>${product.name}</h3>
+                        <p class="price">Rp ${new Intl.NumberFormat(
+                          "id-ID"
+                        ).format(product.price)}</p>
+                        <div class="card-actions">
+                            <a href="form.html?id=${
+                              product.id
+                            }" class="btn btn-edit">Edit</a>
+                            <button class="btn btn-delete" onclick="deleteProduct(${
+                              product.id
+                            })">Hapus</button>
+                        </div>
+                    </div>
+                `;
+          productList.appendChild(card);
+        });
+      });
+
+      // DELETE: Fungsi untuk menghapus produk
+      function deleteProduct(id) {
+        if (confirm("Anda yakin ingin menghapus produk ini?")) {
+          let products = JSON.parse(localStorage.getItem("products")) || [];
+          // Buat array baru tanpa produk yang akan dihapus
+          products = products.filter((product) => product.id != id);
+          // Simpan kembali ke Local Storage
+          localStorage.setItem("products", JSON.stringify(products));
+          // Muat ulang halaman untuk melihat perubahan
+          window.location.reload();
+        }
+      }
+    </script>
+  </body>
+</html>

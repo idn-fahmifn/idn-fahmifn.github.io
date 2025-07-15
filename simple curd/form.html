@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Produk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="form-title">Tambah Produk Baru</h1>
+            <a href="index.html" class="btn">Kembali ke Daftar</a>
+        </header>
+        
+        <form id="productForm">
+            <input type="hidden" id="productId">
+            
+            <div class="form-group">
+                <label for="name">Nama Produk:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Harga:</label>
+                <input type="number" id="price" required>
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">URL Gambar:</label>
+                <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productForm = document.getElementById('productForm');
+            const productIdInput = document.getElementById('productId');
+            const nameInput = document.getElementById('name');
+            const priceInput = document.getElementById('price');
+            const imageUrlInput = document.getElementById('imageUrl');
+            const formTitle = document.getElementById('form-title');
+            const submitButton = document.getElementById('submitButton');
+
+            // Cek apakah ada parameter 'id' di URL (mode edit)
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+
+            if (productId) {
+                // UPDATE (Mode Edit)
+                formTitle.textContent = 'Edit Produk';
+                submitButton.textContent = 'Update';
+
+                const product = products.find(p => p.id == productId);
+                if (product) {
+                    productIdInput.value = product.id;
+                    nameInput.value = product.name;
+                    priceInput.value = product.price;
+                    imageUrlInput.value = product.imageUrl;
+                }
+            }
+
+            // Menangani submit form untuk CREATE dan UPDATE
+            productForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const productData = {
+                    id: productId ? parseInt(productId) : Date.now(),
+                    name: nameInput.value,
+                    price: parseFloat(priceInput.value),
+                    imageUrl: imageUrlInput.value
+                };
+
+                if (productId) {
+                    // Logika Update
+                    const productIndex = products.findIndex(p => p.id == productId);
+                    products[productIndex] = productData;
+                } else {
+                    // Logika Create
+                    products.push(productData);
+                }
+
+                // Simpan array yang diperbarui ke Local Storage
+                localStorage.setItem('products', JSON.stringify(products));
+
+                // Redirect kembali ke halaman daftar
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
