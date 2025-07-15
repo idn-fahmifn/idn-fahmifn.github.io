@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Keren</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* Custom CSS untuk styling tambahan */
+        .hero-section {
+            /* Tinggi section minimal, agar selalu memenuhi viewport */
+            min-height: 100vh;
+            /* Pusatkan konten secara vertikal dan horizontal */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Background cover */
+            background-image: url('https://99designs-blog.imgix.net/blog/wp-content/uploads/2018/12/Gradient_builder_2.jpg?auto=format&q=60&w=1815&h=1200&fit=crop&crop=faces'); /* Ganti dengan gambar Anda */
+            background-size: cover;
+            background-position: center;
+            color: white; /* Warna teks putih agar kontras dengan background */
+            text-align: center;
+            position: relative; /* Diperlukan untuk overlay */
+            overflow: hidden; /* Mencegah konten keluar dari section */
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            
+            z-index: 1; /* Pastikan overlay di bawah konten teks */
+        }
+
+        .hero-content {
+            z-index: 2; /* Pastikan konten teks di atas overlay */
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem; /* Ukuran font lebih besar */
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem; /* Ukuran font untuk deskripsi */
+            margin-bottom: 30px;
+            max-width: 800px; /* Batasi lebar paragraf */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Styling untuk tombol */
+        .btn-custom {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px; /* Tombol bulat */
+            font-weight: bold;
+            transition: all 0.3s ease; /* Transisi halus untuk hover */
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-3px); /* Efek sedikit naik saat hover */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Media queries untuk responsivitas */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .btn-custom {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="container hero-content">
+            <h1 class="display-4">Hallo,  </h1>
+            <p class="lead">
+                Klik pada tombol dibawah untuk melihat contoh project akhir.
+            </p>
+            <a href="contoh-1/index.html" class="btn btn-primary">Landing Page</a>
+            <a href="contoh-2/templates/admin/index.html" class="btn btn-primary">Simple CRUD</a>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
