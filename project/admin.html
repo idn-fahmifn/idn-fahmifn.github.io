@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaLink Admin - Command Center</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Sidebar Active State */
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0) 100%);
+            border-left: 4px solid #3b82f6;
+            color: #60a5fa;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0f172a',
+                            surface: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark-bg text-gray-300 font-sans overflow-hidden">
+
+    <div class="flex h-screen">
+
+        <aside class="w-64 bg-dark-surface border-r border-gray-800 flex flex-col hidden md:flex z-20">
+            <div class="h-16 flex items-center px-6 border-b border-gray-800">
+                <i class="fa-solid fa-bolt text-blue-500 text-xl mr-3"></i>
+                <span class="font-bold text-lg text-white tracking-wide">NEXA<span class="text-blue-500">ADMIN</span></span>
+            </div>
+
+            <nav class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+                <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Main Menu</p>
+                
+                <a href="#" onclick="loadPage('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-3 py-2.5 rounded-lg hover:text-white transition group">
+                    <i class="fa-solid fa-chart-line w-6 text-center mr-2 text-gray-400 group-hover:text-blue-400"></i>
+                    Dashboard
+                </a>
+                
+                <a href="#" onclick="loadPage('tickets')" id="nav-tickets" class="nav-item flex items-center px-3 py-2.5 rounded-lg hover:text-white transition group justify-between">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-headset w-6 text-center mr-2 text-gray-400 group-hover:text-blue-400"></i>
+                        Tiket Masalah
+                    </div>
+                    <span class="bg-red-500/20 text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+                </a>
+                
+                <a href="#" onclick="loadPage('transactions')" id="nav-transactions" class="nav-item flex items-center px-3 py-2.5 rounded-lg hover:text-white transition group">
+                    <i class="fa-solid fa-credit-card w-6 text-center mr-2 text-gray-400 group-hover:text-blue-400"></i>
+                    Transaksi
+                </a>
+                
+                <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg hover:text-white transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-2 text-gray-400 group-hover:text-blue-400"></i>
+                    Pelanggan
+                </a>
+
+                <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-2">System</p>
+                
+                <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg hover:text-white transition group">
+                    <i class="fa-solid fa-server w-6 text-center mr-2 text-gray-400 group-hover:text-blue-400"></i>
+                    Network Status
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-gray-800">
+                <button onclick="logout()" class="flex items-center w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition">
+                    <i class="fa-solid fa-right-from-bracket mr-3"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+            
+            <header class="h-16 bg-dark-surface/80 backdrop-blur border-b border-gray-800 flex items-center justify-between px-6 z-10">
+                <div class="flex items-center">
+                    <button class="md:hidden text-gray-400 mr-4"><i class="fa-solid fa-bars"></i></button>
+                    <h2 class="text-xl font-semibold text-white" id="page-title">Dashboard Overview</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative cursor-pointer">
+                        <i class="fa-regular fa-bell text-gray-400 text-lg hover:text-white transition"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    </div>
+                    <div class="flex items-center pl-4 border-l border-gray-700">
+                        <img src="https://ui-avatars.com/api/?name=Admin+Nexa&background=3b82f6&color=fff" class="w-8 h-8 rounded-full border border-gray-600">
+                        <span class="ml-3 text-sm font-medium text-white hidden sm:block">Super Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-dark-bg p-6">
+                
+                <div id="page-dashboard" class="space-y-6 fade-in">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="glass-panel p-5 rounded-xl border border-blue-500/20 relative overflow-hidden group">
+                            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110">
+                                <i class="fa-solid fa-wallet text-6xl text-blue-500"></i>
+                            </div>
+                            <h4 class="text-sm text-gray-400 font-medium uppercase">Total Revenue (Monthly)</h4>
+                            <p class="text-2xl font-bold text-white mt-1">Rp 145.250.000</p>
+                            <p class="text-xs text-green-400 mt-2 flex items-center"><i class="fa-solid fa-arrow-up mr-1"></i> +12.5% dari bulan lalu</p>
+                        </div>
+                        
+                        <div class="glass-panel p-5 rounded-xl border border-purple-500/20 relative overflow-hidden">
+                            <h4 class="text-sm text-gray-400 font-medium uppercase">Active Subscribers</h4>
+                            <p class="text-2xl font-bold text-white mt-1">1,240</p>
+                            <p class="text-xs text-blue-400 mt-2">New: +45 user minggu ini</p>
+                        </div>
+
+                        <div class="glass-panel p-5 rounded-xl border border-red-500/20 relative overflow-hidden">
+                            <h4 class="text-sm text-gray-400 font-medium uppercase">Pending Tickets</h4>
+                            <p class="text-2xl font-bold text-white mt-1">3</p>
+                            <p class="text-xs text-red-400 mt-2">Butuh penanganan segera</p>
+                        </div>
+                         
+                        <div class="glass-panel p-5 rounded-xl border border-green-500/20 relative overflow-hidden">
+                            <h4 class="text-sm text-gray-400 font-medium uppercase">Network Uptime</h4>
+                            <p class="text-2xl font-bold text-white mt-1">99.98%</p>
+                            <p class="text-xs text-green-400 mt-2">Stable Condition</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold text-white mb-4">Analitik Trafik & Revenue</h3>
+                            <div class="h-64">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold text-white mb-4">Tiket Terbaru</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                                    <div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 flex-shrink-0">
+                                        <i class="fa-solid fa-wifi"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">LOS Merah - Cluster A</p>
+                                        <p class="text-xs text-gray-400">ID: TKT-49210 • 10 menit lalu</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                                    <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 flex-shrink-0">
+                                        <i class="fa-solid fa-gauge-high"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">Koneksi Lambat</p>
+                                        <p class="text-xs text-gray-400">ID: TKT-49211 • 25 menit lalu</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="loadPage('tickets')" class="w-full mt-4 text-center text-sm text-blue-400 hover:text-blue-300">Lihat Semua Tiket</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-tickets" class="hidden space-y-6 fade-in">
+                    <div class="glass-panel rounded-xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-400">
+                                <thead class="bg-slate-800 text-xs uppercase font-medium text-gray-300">
+                                    <tr>
+                                        <th class="px-6 py-4">Ticket ID</th>
+                                        <th class="px-6 py-4">Pelanggan</th>
+                                        <th class="px-6 py-4">Masalah</th>
+                                        <th class="px-6 py-4">Prioritas</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ticket-table-body" class="divide-y divide-gray-800">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-transactions" class="hidden space-y-6 fade-in">
+                    <div class="glass-panel rounded-xl overflow-hidden">
+                         <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-400">
+                                <thead class="bg-slate-800 text-xs uppercase font-medium text-gray-300">
+                                    <tr>
+                                        <th class="px-6 py-4">Invoice</th>
+                                        <th class="px-6 py-4">Date</th>
+                                        <th class="px-6 py-4">Paket</th>
+                                        <th class="px-6 py-4">Jumlah</th>
+                                        <th class="px-6 py-4">Gateway</th>
+                                        <th class="px-6 py-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-table-body" class="divide-y divide-gray-800">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- Dummy Data ---
+        const tickets = [
+            { id: 'TKT-49210', user: 'Budi Santoso', issue: 'Internet Mati (LOS)', priority: 'High', status: 'Open', time: '10 min ago' },
+            { id: 'TKT-49211', user: 'PT Sinergi Jaya', issue: 'Speed Drop', priority: 'Medium', status: 'Open', time: '30 min ago' },
+            { id: 'TKT-49212', user: 'Warung Kopi Kenangan', issue: 'Ganti Password Wifi', priority: 'Low', status: 'Open', time: '1 hour ago' },
+            { id: 'TKT-49100', user: 'Rumah Andi', issue: 'Modem Restart Sendiri', priority: 'Medium', status: 'Resolved', time: 'Yesterday' },
+        ];
+
+        const transactions = [
+            { inv: 'INV-001', date: '14 Jan 2025', package: 'Gamer Pro', amount: 'Rp 450.000', gateway: 'QRIS', status: 'Success' },
+            { inv: 'INV-002', date: '14 Jan 2025', package: 'Starter Home', amount: 'Rp 250.000', gateway: 'VA BCA', status: 'Pending' },
+            { inv: 'INV-003', date: '13 Jan 2025', package: 'SOHO Business', amount: 'Rp 900.000', gateway: 'Credit Card', status: 'Success' },
+            { inv: 'INV-004', date: '13 Jan 2025', package: 'Starter Home', amount: 'Rp 250.000', gateway: 'QRIS', status: 'Failed' },
+        ];
+
+        // --- Navigation Logic ---
+        function loadPage(pageId) {
+            // Hide all pages
+            document.getElementById('page-dashboard').classList.add('hidden');
+            document.getElementById('page-tickets').classList.add('hidden');
+            document.getElementById('page-transactions').classList.add('hidden');
+
+            // Reset nav active state
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-blue-400', 'border-l-4'));
+            
+            // Show selected page
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+
+            // Update Header Title
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'tickets': 'Manajemen Tiket & Support',
+                'transactions': 'Riwayat Transaksi'
+            };
+            document.getElementById('page-title').innerText = titles[pageId];
+        }
+
+        // --- Render Functions ---
+        
+        // 1. Render Tickets
+        function renderTickets() {
+            const tbody = document.getElementById('ticket-table-body');
+            tbody.innerHTML = '';
+            
+            tickets.forEach((t, index) => {
+                const priorityColor = t.priority === 'High' ? 'text-red-400 bg-red-500/10' : (t.priority === 'Medium' ? 'text-yellow-400 bg-yellow-500/10' : 'text-blue-400 bg-blue-500/10');
+                const statusColor = t.status === 'Open' ? 'text-orange-400' : 'text-green-400';
+                
+                const row = `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="px-6 py-4 font-medium text-white">${t.id}</td>
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-white">${t.user}</div>
+                            <div class="text-xs text-gray-500">${t.time}</div>
+                        </td>
+                        <td class="px-6 py-4">${t.issue}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-bold ${priorityColor}">${t.priority}</span></td>
+                        <td class="px-6 py-4 font-bold ${statusColor}">${t.status}</td>
+                        <td class="px-6 py-4">
+                            ${t.status === 'Open' ? 
+                                `<button onclick="resolveTicket(${index})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition">Tangani</button>` : 
+                                `<span class="text-gray-500 text-xs"><i class="fa-solid fa-check"></i> Selesai</span>`
+                            }
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // 2. Render Transactions
+        function renderTransactions() {
+            const tbody = document.getElementById('transaction-table-body');
+            tbody.innerHTML = '';
+
+            transactions.forEach(tr => {
+                let statusBadge = '';
+                if(tr.status === 'Success') statusBadge = '<span class="text-green-400 flex items-center"><div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>Paid</span>';
+                else if(tr.status === 'Pending') statusBadge = '<span class="text-yellow-400 flex items-center"><div class="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>Pending</span>';
+                else statusBadge = '<span class="text-red-400 flex items-center"><div class="w-2 h-2 bg-red-400 rounded-full mr-2"></div>Failed</span>';
+
+                const row = `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="px-6 py-4 font-mono text-xs text-gray-400">${tr.inv}</td>
+                        <td class="px-6 py-4">${tr.date}</td>
+                        <td class="px-6 py-4 font-medium text-white">${tr.package}</td>
+                        <td class="px-6 py-4">${tr.amount}</td>
+                        <td class="px-6 py-4">${tr.gateway}</td>
+                        <td class="px-6 py-4 text-xs font-bold uppercase">${statusBadge}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // --- Action Logic ---
+        function resolveTicket(index) {
+            Swal.fire({
+                title: 'Konfirmasi Penanganan',
+                text: "Apakah teknisi sudah menyelesaikan masalah ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Tandai Selesai'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Update dummy data
+                    tickets[index].status = 'Resolved';
+                    renderTickets(); // Re-render table
+                    Swal.fire(
+                        'Berhasil!',
+                        'Tiket telah ditutup dan notifikasi dikirim ke user.',
+                        'success'
+                    )
+                }
+            })
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Logout?',
+                text: "Anda akan kembali ke halaman login.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Logout'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    window.location.href = 'index.html'; // Assuming user file is named index.html
+                }
+            });
+        }
+
+        // --- Initialize Chart.js ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTickets();
+            renderTransactions();
+
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue (Juta Rupiah)',
+                        data: [120, 135, 125, 145, 160, 185],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
