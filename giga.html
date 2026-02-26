@@ -416,6 +416,13 @@
             const btn = document.getElementById('publicGeoBtn');
             const status = document.getElementById('publicGeoStatus');
 
+            // Deteksi jika file dibuka secara offline (file:///)
+            if (window.location.protocol === 'file:') {
+                status.innerHTML = '⚠️ <strong>Error:</strong> Fitur lokasi tidak bisa berjalan di file lokal. Gunakan Local Server (localhost).';
+                status.className = 'mt-4 text-sm font-semibold h-5 text-red-500';
+                return;
+            }
+
             if (!navigator.geolocation) {
                 status.textContent = 'Browser Anda tidak mendukung fitur lokasi.';
                 status.className = 'mt-4 text-sm font-semibold h-5 text-red-500';
@@ -437,13 +444,17 @@
                     status.className = 'mt-4 text-sm font-semibold h-5 text-brandblue';
                 },
                 (error) => {
-                    status.textContent = 'Akses lokasi ditolak. Silakan ketik alamat secara manual.';
+                    // Menangkap error jika user menolak akses
+                    if (error.code === error.PERMISSION_DENIED) {
+                        status.textContent = 'Akses lokasi ditolak. Silakan izinkan akses lokasi di pengaturan browser.';
+                    } else {
+                        status.textContent = 'Gagal mendeteksi lokasi. Coba lagi atau ketik manual.';
+                    }
                     status.className = 'mt-4 text-sm font-semibold h-5 text-brandorange';
                     btn.innerHTML = '<i class="fas fa-crosshairs"></i>';
                 }
             );
         }
-
         function simulateCoverageCheck() {
             const input = document.getElementById('publicGeoInput').value;
             const status = document.getElementById('publicGeoStatus');
