@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gigahome | Internet Cepat & Stabil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandblue: '#0056b3',
+                        brandorange: '#ff8c00',
+                        branddark: '#1e293b',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #334155; }
+        .hide { display: none !important; }
+        .modal-overlay { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="antialiased selection:bg-brandorange selection:text-white">
+
+    <div class="bg-branddark text-white p-3 text-center flex justify-center gap-4 text-xs font-bold sticky top-0 z-[100] shadow-md">
+        <span class="opacity-50 pt-1 hidden md:block">PROTOTYPE NAVIGATOR:</span>
+        <button onclick="switchView('publicView')" class="px-4 py-1 rounded bg-brandblue hover:bg-blue-600 transition">1. Company Profile</button>
+        <button onclick="switchView('clientView')" class="px-4 py-1 rounded bg-slate-600 hover:bg-slate-500 transition">2. Client Panel</button>
+        <button onclick="switchView('adminView')" class="px-4 py-1 rounded bg-brandorange hover:bg-orange-500 transition">3. Admin Panel</button>
+    </div>
+
+    <div id="publicView" class="block">
+        <nav class="bg-white border-b border-slate-200 px-6 py-4 sticky top-[48px] z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="text-2xl font-black text-brandblue tracking-tight">GIGA<span class="text-brandorange">HOME</span></div>
+                <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-500">
+                    <a href="#about" class="hover:text-brandblue">Tentang</a>
+                    <a href="#services" class="hover:text-brandblue">Layanan</a>
+                    <a href="#products" class="hover:text-brandblue">Produk</a>
+                    <a href="#news" class="hover:text-brandblue">Berita</a>
+                </div>
+                <button onclick="switchView('clientView')" class="bg-brandblue text-white px-6 py-2 rounded-full text-sm font-bold shadow-md hover:bg-blue-700 transition">Login Client</button>
+            </div>
+        </nav>
+
+        <header class="bg-white pt-24 pb-16 px-6 border-b border-slate-100 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto text-center relative z-10">
+                <span class="text-brandorange font-bold text-xs uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                    Internet Service Provider
+                </span>
+                <h1 class="text-5xl md:text-7xl font-black text-branddark mt-6 leading-tight tracking-tight">
+                    Internet Kencang,<br>Dompet <span class="text-brandblue">Tenang.</span>
+                </h1>
+                <p class="mt-6 text-lg text-slate-500 max-w-2xl mx-auto mb-10">
+                    Gigahome menghadirkan koneksi 100% Fiber Optic dan teknologi WiFi 6. Cek apakah lokasi Anda sudah masuk dalam area jangkauan kami!
+                </p>
+
+                <div class="bg-white p-3 md:p-4 rounded-2xl shadow-xl shadow-blue-900/5 max-w-3xl mx-auto flex flex-col md:flex-row gap-3 items-center border border-slate-200">
+                    <div class="flex-1 w-full relative">
+                        <i class="fas fa-map-marker-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-brandorange"></i>
+                        <input type="text" id="publicGeoInput" placeholder="Masukkan alamat atau deteksi via GPS..." class="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-brandblue focus:ring-1 focus:ring-brandblue text-sm transition">
+                    </div>
+                    <div class="flex w-full md:w-auto gap-2">
+                        <button onclick="getPublicGeolocation()" id="publicGeoBtn" class="w-full md:w-auto bg-slate-800 text-white px-5 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-700 transition flex items-center justify-center gap-2 whitespace-nowrap" title="Gunakan GPS Saat Ini">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                        <button onclick="simulateCoverageCheck()" id="checkCoverageBtn" class="w-full md:w-auto bg-brandblue text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-md whitespace-nowrap">
+                            Cek Jangkauan
+                        </button>
+                    </div>
+                </div>
+                <p id="publicGeoStatus" class="mt-4 text-sm font-semibold h-5 text-slate-500 transition-colors"></p>
+            </div>
+            
+            <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-50 rounded-full blur-3xl opacity-50 z-0"></div>
+            <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-orange-50 rounded-full blur-3xl opacity-50 z-0"></div>
+        </header>
+
+        <section id="about" class="py-20 px-6 bg-slate-50">
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-black text-branddark mb-4">Membangun Ekosistem Digital Indonesia</h2>
+                    <p class="text-slate-500 leading-relaxed mb-6">Gigahome adalah penyedia layanan internet berdedikasi yang berfokus pada kestabilan koneksi dan pelayanan pelanggan yang prima. Sejak didirikan, kami berkomitmen menghadirkan infrastruktur jaringan terbaik hingga ke pelosok perumahan.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center"><h3 class="text-4xl font-black text-brandblue">10K+</h3><p class="text-xs font-bold text-slate-400 mt-2 uppercase">Pelanggan Aktif</p></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center"><h3 class="text-4xl font-black text-brandorange">99%</h3><p class="text-xs font-bold text-slate-400 mt-2 uppercase">Uptime Server</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-20 px-6 bg-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16"><h2 class="text-3xl font-black text-branddark">Layanan Unggulan</h2></div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brandblue transition">
+                        <i class="fas fa-wifi text-3xl text-brandblue mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">100% Fiber Optic</h3>
+                        <p class="text-sm text-slate-500">Infrastruktur jaringan kabel optik murni memastikan koneksi stabil di segala cuaca.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brandorange transition">
+                        <i class="fas fa-headset text-3xl text-brandorange mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">Support 24/7</h3>
+                        <p class="text-sm text-slate-500">Tim teknis kami selalu siap memantau dan membantu menyelesaikan kendala jaringan Anda.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brandblue transition">
+                        <i class="fas fa-gamepad text-3xl text-brandblue mb-6"></i>
+                        <h3 class="text-xl font-bold mb-3">Low Latency</h3>
+                        <p class="text-sm text-slate-500">Didesain khusus untuk memberikan pengalaman gaming dan meeting online tanpa lag.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="py-20 px-6 bg-branddark text-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16"><h2 class="text-3xl font-black">Pilihan Paket Gigahome</h2></div>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white text-slate-800 rounded-3xl p-8 border-b-8 border-brandblue">
+                        <h3 class="text-xl font-black text-brandblue uppercase">Giga Starter</h3>
+                        <div class="my-6"><span class="text-5xl font-black">100</span><span class="text-lg font-bold text-slate-400"> Mbps</span></div>
+                        <ul class="space-y-3 text-sm font-semibold text-slate-600 mb-8">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i> Unlimited FUP</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i> Router WiFi 6</li>
+                        </ul>
+                        <div class="text-2xl font-black text-brandorange mb-4">Rp 104.500<span class="text-sm text-slate-400 font-normal">/bln</span></div>
+                    </div>
+                    <div class="bg-white text-slate-800 rounded-3xl p-8 border-b-8 border-brandorange relative overflow-hidden">
+                        <div class="absolute top-4 right-4 bg-brandorange text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Paling Laris</div>
+                        <h3 class="text-xl font-black text-brandorange uppercase">Giga Pro</h3>
+                        <div class="my-6"><span class="text-5xl font-black">200</span><span class="text-lg font-bold text-slate-400"> Mbps</span></div>
+                        <ul class="space-y-3 text-sm font-semibold text-slate-600 mb-8">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i> Unlimited FUP</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i> Prioritas CS</li>
+                        </ul>
+                        <div class="text-2xl font-black text-brandblue mb-4">Rp 200.000<span class="text-sm text-slate-400 font-normal">/bln</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="news" class="py-20 px-6 bg-slate-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-10">
+                    <h2 class="text-3xl font-black text-branddark">Berita & Update</h2>
+                    <a href="#" class="text-sm font-bold text-brandblue hover:underline">Lihat Semua</a>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="text-xs text-slate-400 font-bold mb-2">12 Okt 2026</div>
+                        <h3 class="text-lg font-bold mb-3">Perluasan Jaringan di Area Jakarta Selatan</h3>
+                        <p class="text-sm text-slate-500">Gigahome kini hadir di area Tebet dan sekitarnya dengan promo gratis pemasangan...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-white border-t border-slate-200 py-12 px-6">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+                <div class="text-2xl font-black text-brandblue tracking-tight mb-4 md:mb-0">GIGA<span class="text-brandorange">HOME</span></div>
+                <p class="text-sm text-slate-400 font-semibold">© 2026 PT Gigahome Jaringan Nusantara. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+
+    <div id="clientView" class="hide flex h-screen pt-[48px] bg-slate-50">
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
+            <div class="p-6 border-b border-slate-100 text-xl font-black text-brandblue">GIGA<span class="text-brandorange">CLIENT</span></div>
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-brandblue rounded-xl font-bold text-sm"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl font-bold text-sm"><i class="fas fa-ticket-alt"></i> Pengaduan</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-y-auto">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-black text-branddark">Halo, Budi Santoso!</h1>
+                    <p class="text-sm text-slate-500 font-semibold mt-1">Status: <span class="text-green-500">Pelanggan Aktif</span></p>
+                </div>
+                <button onclick="openOrderModal()" class="bg-brandorange text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:bg-orange-600 transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Order Paket Baru
+                </button>
+            </header>
+
+            <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl mb-8 flex gap-4 items-start">
+                <i class="fas fa-info-circle text-brandblue text-xl mt-0.5"></i>
+                <div>
+                    <h4 class="font-bold text-brandblue">Informasi Maintenance</h4>
+                    <p class="text-sm text-blue-800 mt-1">Akan dilakukan pemeliharaan server pada tanggal 15 Oktober 2026 pukul 01:00 - 03:00 WIB. Mohon maaf atas ketidaknyamanannya.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="font-bold text-lg">Riwayat Pengaduan (Tiket)</h3>
+                    <button class="text-sm text-brandblue font-bold hover:underline">+ Buat Laporan</button>
+                </div>
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 text-slate-500">
+                        <tr>
+                            <th class="p-4 font-semibold">TANGGAL</th>
+                            <th class="p-4 font-semibold">KELUHAN</th>
+                            <th class="p-4 font-semibold">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr>
+                            <td class="p-4 font-medium">10 Okt 2026</td>
+                            <td class="p-4">Koneksi lambat saat malam hari</td>
+                            <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Selesai</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <div id="orderModal" class="hide fixed inset-0 z-[200] flex items-center justify-center p-4 modal-overlay">
+            <div class="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl relative">
+                <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fas fa-times text-xl"></i></button>
+                <h3 class="text-2xl font-black mb-6">Form Order Layanan</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Pilih Paket</label>
+                        <select class="w-full mt-1 p-3 border border-slate-200 rounded-xl bg-slate-50 outline-none focus:border-brandblue">
+                            <option>Giga Starter 100 Mbps - Rp 104.500</option>
+                            <option>Giga Pro 200 Mbps - Rp 200.000</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase">Koordinat Lokasi Pemasangan</label>
+                        <div class="flex gap-2 mt-1">
+                            <input type="text" id="geoInput" placeholder="Latitude, Longitude" readonly class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-sm">
+                            <button onclick="getGeolocation()" id="geoBtn" class="bg-slate-800 text-white px-4 rounded-xl text-sm font-bold whitespace-nowrap hover:bg-slate-700">
+                                <i class="fas fa-map-marker-alt"></i> Ambil Titik
+                            </button>
+                        </div>
+                        <p id="geoStatus" class="text-[10px] text-brandorange mt-1 font-semibold"></p>
+                    </div>
+
+                    <button onclick="openPaymentUI()" class="w-full mt-4 bg-brandblue text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">
+                        Lanjut Pembayaran
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="paymentModal" class="hide fixed inset-0 z-[210] flex items-center justify-center p-4 modal-overlay">
+            <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl">
+                <div class="bg-slate-900 p-6 text-center text-white relative">
+                    <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                    <p class="text-xs font-bold opacity-70 uppercase tracking-widest">Total Tagihan</p>
+                    <h3 class="text-3xl font-black mt-1 text-brandorange">Rp 104.500</h3>
+                    <p class="text-[10px] mt-2 opacity-50">Order ID: ORD-88291</p>
+                </div>
+                <div class="p-6">
+                    <p class="text-xs font-bold text-slate-500 uppercase mb-3">Pilih Metode Pembayaran</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-brandblue has-[:checked]:border-brandblue has-[:checked]:bg-blue-50">
+                            <div class="flex items-center gap-3 font-bold text-sm"><i class="fas fa-qrcode text-brandblue"></i> QRIS</div>
+                            <input type="radio" name="pay" class="accent-brandblue" checked>
+                        </label>
+                        <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-brandblue has-[:checked]:border-brandblue has-[:checked]:bg-blue-50">
+                            <div class="flex items-center gap-3 font-bold text-sm"><i class="fas fa-university text-brandblue"></i> Virtual Account</div>
+                            <input type="radio" name="pay" class="accent-brandblue">
+                        </label>
+                    </div>
+                    <button onclick="processPayment()" id="payBtn" class="w-full mt-6 bg-brandorange text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-orange-600 transition">
+                        Bayar Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="adminView" class="hide flex h-screen pt-[48px] bg-slate-50">
+        <aside class="w-64 bg-branddark text-white flex flex-col hidden md:flex">
+            <div class="p-6 border-b border-white/10 text-xl font-black">GIGA<span class="text-brandorange">ADMIN</span></div>
+            <nav class="flex-1 p-4 space-y-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 pl-4 pt-2">CMS Website</p>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-white/10 rounded-lg text-sm font-semibold"><i class="fas fa-image w-5"></i> Kelola Hero</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-white/10 rounded-lg text-sm font-semibold"><i class="fas fa-box w-5"></i> Kelola Produk</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-white/10 rounded-lg text-sm font-semibold"><i class="fas fa-newspaper w-5"></i> Kelola Berita</a>
+                
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 pl-4 pt-6">Klien & Operasional</p>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-brandblue rounded-lg text-sm font-semibold shadow"><i class="fas fa-shopping-cart w-5"></i> Data Order Baru</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-white/10 rounded-lg text-sm font-semibold"><i class="fas fa-bullhorn w-5"></i> Info ke Client</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-white/10 rounded-lg text-sm font-semibold"><i class="fas fa-ticket-alt w-5"></i> Kelola Pengaduan</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-y-auto">
+            <header class="mb-8">
+                <h1 class="text-2xl font-black text-branddark">Data Order & Geolocation</h1>
+                <p class="text-sm text-slate-500 font-medium">Pantau pesanan masuk dan verifikasi alamat pemasangan via Maps.</p>
+            </header>
+
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div class="p-4 border-b border-slate-100 flex gap-2 bg-slate-50">
+                    <input type="text" placeholder="Cari nama client..." class="p-2 text-sm border border-slate-200 rounded-lg outline-none focus:border-brandblue flex-1 max-w-xs">
+                    <button class="bg-brandblue text-white px-4 rounded-lg text-sm font-bold">Filter</button>
+                </div>
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-white text-slate-500 border-b border-slate-200">
+                        <tr>
+                            <th class="p-4 font-semibold">NAMA CLIENT</th>
+                            <th class="p-4 font-semibold">PAKET DIMINTA</th>
+                            <th class="p-4 font-semibold">KOORDINAT (GPS)</th>
+                            <th class="p-4 font-semibold">STATUS</th>
+                            <th class="p-4 font-semibold">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-4 font-bold">Budi Santoso</td>
+                            <td class="p-4">Giga Starter 100 Mbps</td>
+                            <td class="p-4">
+                                <span class="bg-slate-100 px-2 py-1 rounded text-xs font-mono border border-slate-200">-6.200000, 106.816666</span>
+                            </td>
+                            <td class="p-4"><span class="text-brandorange font-bold text-xs uppercase"><i class="fas fa-circle text-[8px] mr-1"></i> Perlu Survey</span></td>
+                            <td class="p-4">
+                                <a href="https://maps.google.com/?q=-6.200000,106.816666" target="_blank" class="text-brandblue hover:underline font-bold text-xs"><i class="fas fa-map mr-1"></i> Buka Maps</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 1. Logic Perpindahan View Prototype
+        function switchView(viewId) {
+            document.getElementById('publicView').classList.add('hide');
+            document.getElementById('clientView').classList.add('hide');
+            document.getElementById('adminView').classList.add('hide');
+            
+            document.getElementById(viewId).classList.remove('hide');
+            window.scrollTo(0, 0);
+        }
+
+        // 2. Logic Modal Client (Order & Payment)
+        function openOrderModal() {
+            document.getElementById('orderModal').classList.remove('hide');
+        }
+
+        function openPaymentUI() {
+            // Validasi dummy geo
+            if(!document.getElementById('geoInput').value) {
+                alert("Harap ambil titik lokasi terlebih dahulu!");
+                return;
+            }
+            document.getElementById('orderModal').classList.add('hide');
+            document.getElementById('paymentModal').classList.remove('hide');
+        }
+
+        function closeModals() {
+            document.getElementById('orderModal').classList.add('hide');
+            document.getElementById('paymentModal').classList.add('hide');
+        }
+
+        function processPayment() {
+            const btn = document.getElementById('payBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch animate-spin"></i> Memproses...';
+            setTimeout(() => {
+                alert("Simulasi Pembayaran Berhasil! Data diteruskan ke Admin.");
+                closeModals();
+                btn.innerHTML = 'Bayar Sekarang';
+            }, 1500);
+        }
+
+        // 3. Logic Geolocation (HTML5 API)
+        function getGeolocation() {
+            const status = document.getElementById('geoStatus');
+            const input = document.getElementById('geoInput');
+            const btn = document.getElementById('geoBtn');
+
+            if (!navigator.geolocation) {
+                status.textContent = 'Geolocation tidak didukung browser ini.';
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i>';
+            status.textContent = 'Mencari lokasi...';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lng = position.coords.longitude.toFixed(6);
+                    input.value = `${lat}, ${lng}`;
+                    status.textContent = '✅ Titik koordinat berhasil didapatkan.';
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    btn.classList.replace('bg-slate-800', 'bg-green-600');
+                },
+                (error) => {
+                    status.textContent = '❌ Akses lokasi ditolak atau gagal. Coba izinkan popup browser.';
+                    btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Ambil Titik';
+                }
+            );
+        }
+
+        // 4. Logic Geolocation Publik (Company Profile)
+        function getPublicGeolocation() {
+            const input = document.getElementById('publicGeoInput');
+            const btn = document.getElementById('publicGeoBtn');
+            const status = document.getElementById('publicGeoStatus');
+
+            if (!navigator.geolocation) {
+                status.textContent = 'Browser Anda tidak mendukung fitur lokasi.';
+                status.className = 'mt-4 text-sm font-semibold h-5 text-red-500';
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i>';
+            status.textContent = 'Mendeteksi lokasi Anda...';
+            status.className = 'mt-4 text-sm font-semibold h-5 text-slate-500';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lng = position.coords.longitude.toFixed(6);
+                    input.value = `${lat}, ${lng}`;
+                    
+                    btn.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+                    status.innerHTML = '📍 Titik kordinat didapatkan. Silakan klik <strong>Cek Jangkauan</strong>.';
+                    status.className = 'mt-4 text-sm font-semibold h-5 text-brandblue';
+                },
+                (error) => {
+                    status.textContent = 'Akses lokasi ditolak. Silakan ketik alamat secara manual.';
+                    status.className = 'mt-4 text-sm font-semibold h-5 text-brandorange';
+                    btn.innerHTML = '<i class="fas fa-crosshairs"></i>';
+                }
+            );
+        }
+
+        function simulateCoverageCheck() {
+            const input = document.getElementById('publicGeoInput').value;
+            const status = document.getElementById('publicGeoStatus');
+            const btn = document.getElementById('checkCoverageBtn');
+
+            if(!input) {
+                status.textContent = 'Mohon masukkan alamat atau klik icon target (GPS) terlebih dahulu!';
+                status.className = 'mt-4 text-sm font-semibold h-5 text-red-500';
+                return;
+            }
+
+            // Simulasi proses loading cek ke database/API
+            btn.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> Mengecek...';
+            status.textContent = 'Memverifikasi ketersediaan jaringan...';
+            status.className = 'mt-4 text-sm font-semibold h-5 text-slate-500';
+            
+            setTimeout(() => {
+                btn.innerHTML = 'Cek Jangkauan';
+                status.innerHTML = '🎉 Selamat! Lokasi Anda masuk dalam area jangkauan <strong>GIGAHOME Fiber Optic</strong>.';
+                status.className = 'mt-4 text-sm font-semibold h-5 text-green-600';
+                
+                // Opsional: Ubah tombol menjadi "Daftar Sekarang" setelah sukses
+                btn.innerHTML = 'Daftar Sekarang';
+                btn.classList.replace('bg-brandblue', 'bg-brandorange');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-orange-600');
+                btn.setAttribute('onclick', "switchView('clientView')"); // Mengarahkan ke panel client/login
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
