@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Belajar HTML Semantic</title>
+    <style>
+      /* ===== Reset sederhana ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Georgia, serif;
+        background: #fafaf7;
+        color: #222;
+        line-height: 1.6;
+        padding: 30px;
+      }
+
+      /* ===== Setiap element semantic dikasih garis biar kelihatan ===== */
+      header,
+      nav,
+      main,
+      section,
+      article,
+      aside,
+      footer {
+        border: 2px dashed #888;
+        padding: 20px;
+        margin-bottom: 15px;
+        position: relative;
+        background: #fff;
+      }
+
+      /* Label di pojok kiri atas tiap element */
+      header::before,
+      nav::before,
+      main::before,
+      section::before,
+      article::before,
+      aside::before,
+      footer::before {
+        position: absolute;
+        top: -11px;
+        left: 15px;
+        background: #fafaf7;
+        padding: 0 8px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      header::before  { content: "<header>";  color: #c0392b; }
+      nav::before     { content: "<nav>";     color: #2980b9; }
+      main::before    { content: "<main>";    color: #27ae60; }
+      section::before { content: "<section>"; color: #8e44ad; }
+      article::before { content: "<article>"; color: #d35400; }
+      aside::before   { content: "<aside>";   color: #16a085; }
+      footer::before  { content: "<footer>";  color: #c0392b; }
+
+      /* Beda warna garis tiap tag biar jelas */
+      header  { border-color: #c0392b; }
+      nav     { border-color: #2980b9; }
+      main    { border-color: #27ae60; }
+      section { border-color: #8e44ad; }
+      article { border-color: #d35400; }
+      aside   { border-color: #16a085; }
+      footer  { border-color: #c0392b; }
+
+      /* ===== LAYOUT 2 KOLOM: main + aside pisah sendiri ===== */
+      .layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 15px;
+        align-items: start;
+      }
+
+      /* MAIN: di dalamnya juga 2 kolom untuk section */
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 0;
+      }
+
+      /* Note di main span 2 kolom */
+      main > .note {
+        grid-column: 1 / -1;
+        margin: 0 0 5px 0;
+      }
+
+      /* Section reset margin karena sudah pakai gap dari grid */
+      section {
+        margin-bottom: 0;
+      }
+
+      /* Aside reset margin + sticky biar nempel waktu scroll */
+      aside {
+        margin-bottom: 0;
+        position: sticky;
+        top: 20px;
+      }
+
+      /* ===== Konten ===== */
+      h1, h2, h3 {
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin-bottom: 10px;
+      }
+
+      nav ul {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+        flex-wrap: wrap;
+      }
+
+      nav ul li {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      nav ul li:hover {
+        text-decoration: underline;
+      }
+
+      /* ===== Table sederhana ===== */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+
+      th, td {
+        border: 1px solid #888;
+        padding: 8px 10px;
+        text-align: left;
+      }
+
+      th {
+        background: #f0ebe0;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #faf7f0;
+      }
+
+      /* ===== Form sederhana ===== */
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      label {
+        display: block;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        margin-bottom: 4px;
+        color: #555;
+      }
+
+      input, textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #888;
+        font-family: Georgia, serif;
+        font-size: 14px;
+        background: #fff;
+      }
+
+      input:focus, textarea:focus {
+        outline: none;
+        border-color: #c0392b;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      button {
+        margin-top: 5px;
+        padding: 8px 20px;
+        background: #222;
+        color: #fff;
+        border: none;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #c0392b;
+      }
+
+      .note {
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+      }
+
+      /* Galeri sederhana */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .gallery div {
+        background: #ddd;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        color: #555;
+        border: 1px solid #aaa;
+      }
+
+      /* Aside item */
+      aside .item {
+        padding: 12px;
+        background: #f5fbf9;
+        border-left: 3px solid #16a085;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      aside .item strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #16a085;
+      }
+
+      /* Judul materi */
+      .judul-materi {
+        text-align: center;
+        margin-bottom: 25px;
+        font-family: "Courier New", monospace;
+        color: #555;
+      }
+
+      /* Responsive: di layar kecil jadi 1 kolom */
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        main {
+          grid-template-columns: 1fr;
+        }
+        aside {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="judul-materi">
+      <h2>Materi: HTML Semantic Element</h2>
+      <p class="note">Layout 2 kolom — main (kiri, isinya 2 kolom section) & aside (kanan, pisah sendiri)</p>
+    </div>
+
+    <!-- HEADER: bagian atas web -->
+    <header>
+      <h1>Nama Website</h1>
+      <p class="note">// area atas — biasanya logo / judul, didefinisikan SEKALI</p>
+
+      <!-- NAV: navigasi menu -->
+      <nav>
+        <ul>
+          <li>Home</li>
+          <li>Service</li>
+          <li>Product</li>
+          <li>Gallery</li>
+          <li>Contact Us</li>
+        </ul>
+        <p class="note">// untuk daftar menu navigasi</p>
+      </nav>
+    </header>
+
+    <!-- LAYOUT 2 KOLOM: MAIN + ASIDE pisah sendiri -->
+    <div class="layout">
+      <!-- MAIN: konten utama, di dalamnya 2 kolom section -->
+      <main>
+        <p class="note">// body utama — di dalam main ada 2 kolom section</p>
+
+        <!-- SECTION 1: Product -->
+        <section id="product">
+          <h2>Product</h2>
+          <p>Daftar produk dalam bentuk card.</p>
+          <p class="note">// section untuk topik tertentu</p>
+        </section>
+
+        <!-- SECTION 2: Service (table) -->
+        <section id="myservice">
+          <h2>My Service</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Service</th>
+                <th>Harga</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Konsultasi</td>
+                <td>Rp 100rb</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Desain Web</td>
+                <td>Rp 1,5jt</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Maintenance</td>
+                <td>Rp 500rb</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- SECTION 3: Gallery -->
+        <section id="gallery">
+          <h2>Gallery</h2>
+          <div class="gallery">
+            <div>img 1</div>
+            <div>img 2</div>
+            <div>img 3</div>
+            <div>img 4</div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: Article -->
+        <section id="article">
+          <h2>Article</h2>
+
+          <article>
+            <h3>Judul Artikel</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <p class="note">// khusus konten panjang</p>
+          </article>
+        </section>
+
+        <!-- SECTION 5: Contact (form) -->
+        <section id="contact">
+          <h2>Contact Us</h2>
+          <form onsubmit="event.preventDefault(); alert('Pesan terkirim!');">
+            <div class="form-group">
+              <label for="nama">Nama:</label>
+              <input type="text" id="nama" placeholder="Nama lengkap" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" placeholder="email@contoh.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="pesan">Pesan:</label>
+              <textarea id="pesan" placeholder="Tulis pesan..." required></textarea>
+            </div>
+
+            <button type="submit">Kirim</button>
+          </form>
+        </section>
+      </main>
+
+      <!-- ASIDE: PISAH SENDIRI di kolom kanan -->
+      <aside>
+        <h3>Berita & Iklan</h3>
+
+        <div class="item">
+          <strong>📰 Berita</strong>
+          Promo akhir bulan, diskon 20% untuk semua produk!
+        </div>
+
+        <div class="item">
+          <strong>📢 Iklan</strong>
+          Paket bundling spesial mulai Rp 99rb saja.
+        </div>
+
+        <div class="item">
+          <strong>💡 Info</strong>
+          Layanan baru tersedia bulan depan.
+        </div>
+
+        <p class="note">// pisah dari main — konten tambahan: berita, iklan</p>
+      </aside>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2026 Nama Website. All rights reserved.</p>
+      <p>Follow us: Instagram | Twitter | Facebook</p>
+      <p class="note">// kaki halaman: copyright + medsos, didefinisikan SEKALI</p>
+    </footer>
+  </body>
+</html>
