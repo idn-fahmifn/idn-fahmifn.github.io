@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap");
+
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: "Google Sans", sans-serif;
+      }
+
+      .container {
+        width: 80dvw;
+        min-height: 40dvh;
+        margin: 24px;
+        padding: 24px;
+        /* border: 0.4px #4e4e4e50 solid; */
+      }
+
+      .card {
+        width: 90%;
+        border: 0.4px #4e4e4e50 solid;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr;
+        gap: 16px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        gap: 16px;
+      }
+
+      input,
+      button {
+        padding: 8px;
+      }
+
+      .table-list {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 0.4px #4e4e4e60 solid;
+        padding: 16px 8px;
+      }
+
+      .img-product {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1 style="margin-bottom: 24px">
+          Simple CRUD HTML, CSS dan Vanilla JS
+        </h1>
+        <form id="form">
+          <div class="grid-3">
+            <div class="form-group">
+              <label for="">Product Name</label>
+              <input type="number" id="id" hidden />
+              <input
+                type="text"
+                name="product_name"
+                id="productName"
+                placeholder="ex: Sabun"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Image Product</label>
+              <input
+                type="url"
+                name="image_product"
+                id="imageProduct"
+                placeholder="image url (https://...)"
+              />
+            </div>
+            <div class="form-group">
+              <button type="submit">Add</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <table class="table-list">
+          <thead>
+            <th>Product Name</th>
+            <th>Image</th>
+            <th>Action</th>
+          </thead>
+          <tbody id="listData">
+            <tr>
+              <td>Sandal</td>
+              <td>
+                <img
+                  src="https://loremflickr.com/2679/429?lock=2659025948095272"
+                  class="img-product"
+                  alt=""
+                />
+              </td>
+              <td>
+                <button onclick="edit">edit</button>
+                <button onclick="edit">delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const api = "https://69fc3736fce564e259177713.mockapi.io/product";
+    const list = document.getElementById("listData");
+    const form = document.getElementById("form");
+
+    // Fungsi untuk get data
+    function getData() {
+      fetch(api) // mengambil API
+        .then((res) => res.json()) //mengubah response menjadi json.
+        .then((data) => {
+          list.innerHTML = "";
+          data.forEach((item) => {
+            list.innerHTML += `
+            <tr>
+              <td>${item.product_name}</td>
+              <td>
+                <img
+                  src="${item.image}"
+                  class="img-product"
+                  alt=""
+                />
+              </td>
+              <td>
+                <button onclick="editData('${item.id}', '${item.product_name}', '${item.image}')">edit</button>
+                <button onclick="hapusData('${item.id}')">delete</button>
+              </td>
+            </tr>
+            `;
+          });
+        });
+    }
+
+    // fungsi yang berjalan saat form ditambahkan data
+    form.addEventListener("submit", function (e) {
+      // agar tidak reload saat menyimpan / mengedit data.
+      e.preventDefault();
+
+      // ambil semua nilai yang akan ditambahkan dari form
+      const id = document.getElementById("id").value;
+      const product_name = document.getElementById("productName").value;
+      const image = document.getElementById("imageProduct").value;
+
+      // siapkan data yang akan dikirimkan (sesuaikan dengan field di API)
+      const body = JSON.stringify({ product_name, image });
+      if (id === "") {
+        // jika ID nya tidak ada mengirimkan data (method POST)
+        fetch(api, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body,
+          // jika data sudah dikirim, selanjutnya buat form nya menjadi kosong.
+        }).then(() => {
+          resetForm(); //mengosongkan form
+          getData(); //refresh datanya.
+        });
+      } else {
+        fetch(api + "/" + id, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: body,
+          // jika data sudah dikirim, selanjutnya buat form nya menjadi kosong.
+        }).then(() => {
+          resetForm(); //mengosongkan form
+          getData(); //refresh datanya.
+        });
+      }
+    });
+
+    function editData(id, product_name, image) {
+      document.getElementById("id").value = id;
+      document.getElementById("productName").value = product_name;
+      document.getElementById("imageProduct").value = image;
+    }
+
+    function hapusData(id) {
+      if (confirm("Yakin nih mau dihapus?")) {
+        fetch(api + "/" + id, {
+          method: "DELETE",
+        }).then(() => {
+          resetForm(); //mengosongkan form
+          getData(); //refresh datanya.
+        });
+      }
+    }
+
+    // ngehpus form agar kosong
+    function resetForm() {
+      form.reset();
+      document.getElementById("id").value = "";
+    }
+
+    getData();
+  </script>
+</html>
