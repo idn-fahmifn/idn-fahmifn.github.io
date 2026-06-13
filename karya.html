@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galeri Karya — IT Programming SMP BQ Islamic School</title>
+<style>
+  :root{
+    --deep:#163A5F; --blue:#2F7FC4; --sky:#5BA3DC; --tint:#EAF3FB;
+    --tint2:#DEEBF8; --muted:#5E748A; --line:#D4E4F4; --white:#fff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:"Segoe UI",Calibri,Arial,sans-serif; color:var(--deep);
+    min-height:100vh;
+    background:linear-gradient(135deg,#E7F1FC 0%,#F2F6F5 50%,#FBF4EA 100%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:26px 22px 60px;}
+  header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;}
+  .kicker{color:var(--blue);font-weight:700;letter-spacing:3px;font-size:12px;}
+  h1{font-size:30px;margin-top:4px;}
+  h1 .hl{color:var(--blue);}
+  .sub{color:var(--muted);font-size:15px;margin-top:6px;}
+  .badge{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-size:12.5px;font-weight:700;color:var(--deep);box-shadow:0 6px 16px rgba(22,58,95,.08);}
+  .badge span{color:var(--blue);}
+
+  /* nav tabs */
+  .tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:22px 0;}
+  .tab{
+    background:var(--white);border:2px solid transparent;border-radius:14px;padding:12px 8px;cursor:pointer;
+    text-align:center;transition:.15s;box-shadow:0 8px 18px rgba(22,58,95,.07);
+  }
+  .tab:hover{transform:translateY(-2px);}
+  .tab.active{border-color:var(--blue);background:#F4F9FE;}
+  .tab .emo{font-size:24px;}
+  .tab .s{display:block;font-size:10.5px;color:var(--blue);font-weight:700;margin-top:4px;letter-spacing:.5px;}
+  .tab .nm{display:block;font-size:12.5px;font-weight:700;margin-top:2px;line-height:1.2;}
+
+  /* stage */
+  .stage{background:var(--white);border-radius:20px;box-shadow:0 18px 50px rgba(22,58,95,.14);padding:26px;min-height:520px;}
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .phead{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;}
+  .pico{width:54px;height:54px;border-radius:50%;background:var(--tint2);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;}
+  .ptitle{font-size:22px;font-weight:800;}
+  .ptag{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:1px;}
+  .pdesc{color:var(--muted);font-size:15px;margin:8px 0 18px;line-height:1.55;}
+  .demo-area{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+  .demo-main{flex:1;min-width:300px;}
+  .demo-side{width:260px;flex:none;}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;}
+  .tag{background:var(--tint);color:var(--deep);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;}
+  .side-h{font-size:13px;font-weight:800;color:var(--deep);margin:0 0 9px;text-transform:uppercase;letter-spacing:1px;}
+  .note{background:var(--tint);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--muted);line-height:1.5;margin-top:14px;}
+
+  /* generic controls */
+  button.act{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;}
+  button.act:hover{background:#256aa6;}
+  input,select{font-family:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;outline:none;width:100%;}
+  input:focus,select:focus{border-color:var(--blue);}
+
+  /* game */
+  #gcanvas{background:linear-gradient(#EAF3FB,#D8E9F8);border-radius:14px;width:100%;max-width:560px;display:block;border:1px solid var(--line);}
+  .ghud{font-size:14px;color:var(--muted);margin-top:8px;}
+
+  /* phone frame */
+  .phone{width:250px;background:#1f2d3d;border-radius:30px;padding:12px;box-shadow:0 16px 40px rgba(22,58,95,.25);margin:0 auto;}
+  .phone .screen{background:#fff;border-radius:20px;overflow:hidden;height:440px;display:flex;flex-direction:column;}
+  .app-top{background:var(--blue);color:#fff;padding:14px 16px;}
+  .app-top h3{font-size:16px;}
+  .app-top p{font-size:11px;opacity:.85;}
+  .app-body{padding:12px 14px;overflow-y:auto;flex:1;}
+  .hf-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eef3f8;}
+  .hf-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--sky);flex:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+  .hf-check.on{background:var(--blue);border-color:var(--blue);}
+  .hf-name{font-size:13.5px;font-weight:600;}
+  .hf-sub{font-size:11px;color:var(--muted);}
+  .prog{height:9px;background:#e7eef6;border-radius:6px;overflow:hidden;margin-top:4px;}
+  .prog i{display:block;height:100%;background:var(--blue);width:0;transition:.3s;}
+  .app-add{display:flex;gap:7px;padding:10px 12px;border-top:1px solid #eef3f8;}
+  .app-add input{padding:7px 9px;font-size:12px;}
+  .app-add button{padding:7px 12px;font-size:12px;}
+
+  /* browser frame */
+  .browser{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(22,58,95,.12);max-width:620px;}
+  .bbar{background:#eef3f8;padding:9px 12px;display:flex;align-items:center;gap:8px;}
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .url{background:#fff;border-radius:7px;padding:5px 12px;font-size:12px;color:var(--muted);flex:1;}
+  .site{height:430px;overflow-y:auto;background:#fff;}
+  .site-hero{background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;padding:40px 26px;text-align:center;}
+  .site-hero h2{font-size:26px;}
+  .site-hero p{opacity:.9;margin-top:8px;font-size:14px;}
+  .site-nav{background:var(--deep);color:#fff;display:flex;gap:18px;padding:11px 22px;font-size:13px;}
+  .site-nav b{color:#fff;}
+  .site-sec{padding:24px 26px;}
+  .site-sec h3{font-size:18px;margin-bottom:14px;}
+  .ek-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .ek{background:var(--tint);border-radius:12px;padding:16px;text-align:center;}
+  .ek .e{font-size:30px;}
+  .ek h4{font-size:14px;margin:8px 0 4px;}
+  .ek p{font-size:11.5px;color:var(--muted);}
+  .site-foot{background:var(--deep);color:#cdddee;padding:16px 26px;font-size:12px;text-align:center;}
+
+  /* robot */
+  .robot-stage{display:flex;gap:24px;flex-wrap:wrap;align-items:center;}
+  .bulb{width:120px;height:120px;border-radius:50%;background:#e7eef6;display:flex;align-items:center;justify-content:center;font-size:60px;transition:.25s;border:3px solid var(--line);}
+  .bulb.on{background:#FFF4CC;border-color:#F4C430;box-shadow:0 0 40px 6px rgba(244,196,48,.55);}
+  .ctrl{flex:1;min-width:240px;}
+  .ctrl label{font-size:13px;font-weight:700;display:block;margin:14px 0 6px;}
+  .row{display:flex;align-items:center;gap:12px;}
+  .switch{position:relative;width:52px;height:28px;flex:none;}
+  .switch input{opacity:0;width:0;height:0;}
+  .sl{position:absolute;inset:0;background:#cbd8e6;border-radius:20px;cursor:pointer;transition:.2s;}
+  .sl:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+  .switch input:checked + .sl{background:var(--blue);}
+  .switch input:checked + .sl:before{transform:translateX(24px);}
+  .serial{background:#0f2030;color:#7CF0B4;font-family:Consolas,monospace;font-size:12px;border-radius:10px;padding:12px;height:108px;overflow-y:auto;margin-top:8px;white-space:pre-line;}
+  input[type=range]{accent-color:var(--blue);}
+
+  /* code demo (jadwal + crud) */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .mini{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfdff;}
+  .mini h4{font-size:15px;margin-bottom:10px;}
+  .sholat{display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;font-size:14px;}
+  .sholat.next{background:var(--blue);color:#fff;font-weight:700;}
+  .zi-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #eef3f8;font-size:13.5px;}
+  .zi-row button{background:none;border:none;color:#d2546a;cursor:pointer;font-size:13px;font-weight:700;}
+  .zi-add{display:flex;gap:7px;margin-top:10px;}
+  .zi-total{margin-top:10px;font-weight:800;color:var(--blue);font-size:14px;}
+
+  /* capstone dashboard */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+  .stat{background:var(--tint);border-radius:14px;padding:16px;}
+  .stat .v{font-size:26px;font-weight:800;color:var(--blue);}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #eef3f8;}
+  th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
+  td.num{text-align:right;font-weight:700;color:var(--deep);}
+  .cap-add{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-top:14px;}
+
+  @media(max-width:720px){
+    .tabs{grid-template-columns:repeat(3,1fr);}
+    .grid2{grid-template-columns:1fr;}
+    .demo-side{width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="kicker">GALERI KARYA SISWA</div>
+      <h1>Apa yang akan <span class="hl">kamu buat?</span></h1>
+      <div class="sub">Contoh hasil karya selama 3 tahun — klik tiap karya, coba langsung!</div>
+    </div>
+    <div class="badge">IT Programming · <span>SMP BQ Islamic School</span></div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-target="demo-game"><div class="emo">🎮</div><span class="s">SEM 1 · KLS 7</span><span class="nm">Game</span></div>
+    <div class="tab" data-target="demo-app"><div class="emo">📱</div><span class="s">SEM 2 · KLS 7</span><span class="nm">Aplikasi HP</span></div>
+    <div class="tab" data-target="demo-web"><div class="emo">🌐</div><span class="s">SEM 3 · KLS 8</span><span class="nm">Website</span></div>
+    <div class="tab" data-target="demo-robot"><div class="emo">🤖</div><span class="s">SEM 4 · KLS 8</span><span class="nm">Robot</span></div>
+    <div class="tab" data-target="demo-code"><div class="emo">💻</div><span class="s">SEM 5 · KLS 9</span><span class="nm">Web Ngoding</span></div>
+    <div class="tab" data-target="demo-capstone"><div class="emo">🚀</div><span class="s">SEM 6 · KLS 9</span><span class="nm">Capstone</span></div>
+  </div>
+
+  <div class="stage">
+    <!-- 1. GAME -->
+    <div class="panel active" id="demo-game">
+      <div class="phead"><div class="pico">🎮</div><div><div class="ptag">SEMESTER 1 · KELAS 7</div><div class="ptitle">Game Edukasi (Scratch)</div></div></div>
+      <div class="pdesc">Game pertamamu — gerakkan keranjang, tangkap bintang, hindari batu. Inilah yang kamu buat dengan Scratch.</div>
+      <div class="demo-area">
+        <div class="demo-main">
+          <canvas id="gcanvas" width="560" height="360"></canvas>
+          <div class="ghud" id="ghud">Skor: 0 · Nyawa: ♥♥♥ — gerakkan dengan mouse atau panah ← →</div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">Perulangan</span><span class="tag">Kondisi</span><span class="tag">Variabel</span><span class="tag">Event</span><span class="tag">Sensing</span></div>
+          <div class="note">Game ini memakai konsep coding sungguhan: <b>loop</b>, <b>kondisi</b>, dan <b>variabel skor</b> — sama seperti di program besar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. APP HP -->
+    <div class="panel" id="demo-app">
+      <div class="phead"><div class="pico">📱</div><div><div class="ptag">SEMESTER 2 · KELAS 7</div><div class="ptitle">Aplikasi HP (Kodular)</div></div></div>
+      <div class="pdesc">Aplikasi Android buatanmu, lengkap dengan database. Contoh: aplikasi pencatat hafalan. Centang yang sudah hafal!</div>
+      <div class="demo-area">
+        <div class="demo-main" style="display:flex;justify-content:center;">
+          <div class="phone"><div class="screen">
+            <div class="app-top"><h3>Tracker Hafalan</h3><p>Progres hafalanmu</p>
+              <div class="prog" style="margin-top:8px;"><i id="hfbar"></i></div>
+            </div>
+            <div class="app-body" id="hflist"></div>
+            <div class="app-add">
+              <input id="hfinput" placeholder="Tambah surah…">
+              <button class="act" onclick="addHafalan()">+</button>
+            </div>
+          </div></div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">Komponen UI</span><span class="tag">Event handling</span><span class="tag">TinyDB</span><span class="tag">Layouting</span></div>
+          <div class="note">Data centang disimpan layaknya <b>database</b> di aplikasi sungguhan. Coba centang & tambah surah baru.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. WEBSITE -->
+    <div class="panel" id="demo-web">
+      <div class="phead"><div class="pico">🌐</div><div><div class="ptag">SEMESTER 3 · KELAS 8</div><div class="ptitle">Website (Framer & WordPress)</div></div></div>
+      <div class="pdesc">Website-mu sendiri yang tampil online dan bisa dibagikan link-nya. Scroll untuk melihat seluruh halaman.</div>
+      <div class="demo-area">
+        <div class="demo-main">
+          <div class="browser">
+            <div class="bbar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">https://ekskul.smpbq.sch.id</span></div>
+            <div class="site">
+              <div class="site-nav"><b>SMP BQ</b><span>Beranda</span><span>Ekskul</span><span>Galeri</span><span>Kontak</span></div>
+              <div class="site-hero"><h2>Ekstrakurikuler SMP BQ</h2><p>Temukan minat & bakatmu bersama kami</p></div>
+              <div class="site-sec">
+                <h3>Pilihan Ekskul</h3>
+                <div class="ek-grid">
+                  <div class="ek"><div class="e">💻</div><h4>Klub IT</h4><p>Coding & robotika</p></div>
+                  <div class="ek"><div class="e">⚽</div><h4>Futsal</h4><p>Latihan tiap Jumat</p></div>
+                  <div class="ek"><div class="e">📖</div><h4>Tahfidz</h4><p>Bimbingan hafalan</p></div>
+                  <div class="ek"><div class="e">🎨</div><h4>Seni</h4><p>Lukis & kaligrafi</p></div>
+                  <div class="ek"><div class="e">🔬</div><h4>Sains</h4><p>Eksperimen seru</p></div>
+                  <div class="ek"><div class="e">🎤</div><h4>Public Speaking</h4><p>Latih percaya diri</p></div>
+                </div>
+              </div>
+              <div class="site-foot">© 2026 SMP BQ Islamic School · Dibuat oleh siswa kelas 8</div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">Desain web</span><span class="tag">Responsive</span><span class="tag">WordPress</span><span class="tag">Publikasi</span></div>
+          <div class="note">Website ini bisa dibuka siapa saja lewat link — karya yang bisa kamu tunjukkan ke orang tua & teman.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ROBOT -->
+    <div class="panel" id="demo-robot">
+      <div class="phead"><div class="pico">🤖</div><div><div class="ptag">SEMESTER 4 · KELAS 8</div><div class="ptitle">Robot & Alat Pintar (Arduino)</div></div></div>
+      <div class="pdesc">Simulasi "Lampu Pintar": geser sensor cahaya — saat gelap, lampu menyala sendiri. Inilah logika robot yang kamu program.</div>
+      <div class="demo-area">
+        <div class="demo-main">
+          <div class="robot-stage">
+            <div class="bulb" id="bulb">💡</div>
+            <div class="ctrl">
+              <label>Sensor cahaya sekitar: <span id="luxval">70</span></label>
+              <input type="range" id="lux" min="0" max="100" value="70" style="width:100%" oninput="robotUpdate()">
+              <div class="row" style="margin-top:14px;">
+                <span style="font-size:13px;font-weight:700;">Mode otomatis</span>
+                <label class="switch"><input type="checkbox" id="automode" checked onchange="robotUpdate()"><span class="sl"></span></label>
+                <span id="modetxt" style="font-size:12px;color:var(--muted);"></span>
+              </div>
+              <div class="serial" id="serial"></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">Sensor</span><span class="tag">Kondisi (if)</span><span class="tag">Input→Output</span><span class="tag">Arduino IDE</span></div>
+          <div class="note"><b>Kalau</b> cahaya &lt; 40 <b>maka</b> lampu menyala — logika <b>if</b> yang sama persis seperti di game & aplikasi.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. WEB NGODING -->
+    <div class="panel" id="demo-code">
+      <div class="phead"><div class="pico">💻</div><div><div class="ptag">SEMESTER 5 · KELAS 9</div><div class="ptitle">Aplikasi Web — Ngoding Sendiri</div></div></div>
+      <div class="pdesc">Ditulis dengan kodemu sendiri (HTML, CSS, JavaScript). Contoh: jadwal sholat & pencatat ziyadah.</div>
+      <div class="demo-area">
+        <div class="demo-main">
+          <div class="grid2">
+            <div class="mini">
+              <h4>🕌 Jadwal Sholat</h4>
+              <div id="sholat"></div>
+            </div>
+            <div class="mini">
+              <h4>📖 Catatan Ziyadah</h4>
+              <div id="zilist"></div>
+              <div class="zi-add">
+                <input id="ziname" placeholder="Nama">
+                <input id="zipage" type="number" placeholder="Hal" style="max-width:70px;">
+                <button class="act" onclick="addZi()">+</button>
+              </div>
+              <div class="zi-total" id="zitotal">Total: 0 halaman</div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">HTML/CSS/JS</span><span class="tag">CRUD</span><span class="tag">Fetch API</span><span class="tag">Database</span></div>
+          <div class="note">Tambah & hapus catatan = operasi <b>CRUD</b> nyata, fondasi hampir semua aplikasi modern.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CAPSTONE -->
+    <div class="panel" id="demo-capstone">
+      <div class="phead"><div class="pico">🚀</div><div><div class="ptag">SEMESTER 6 · KELAS 9</div><div class="ptitle">Aplikasi Capstone (Laravel)</div></div></div>
+      <div class="pdesc">Aplikasi sungguhan yang dipakai komunitas sekolah. Contoh: dashboard infaq kelas — coba tambah data!</div>
+      <div class="demo-area">
+        <div class="demo-main">
+          <div class="stats">
+            <div class="stat"><div class="v" id="cTotal">Rp0</div><div class="l">Total infaq</div></div>
+            <div class="stat"><div class="v" id="cCount">0</div><div class="l">Jumlah donatur</div></div>
+            <div class="stat"><div class="v" id="cAvg">Rp0</div><div class="l">Rata-rata</div></div>
+          </div>
+          <table><thead><tr><th>Nama</th><th style="text-align:right;">Nominal</th></tr></thead><tbody id="cBody"></tbody></table>
+          <div class="cap-add">
+            <input id="cName" placeholder="Nama siswa">
+            <input id="cAmt" type="number" placeholder="Nominal (Rp)">
+            <button class="act" onclick="addInfaq()">Tambah</button>
+          </div>
+        </div>
+        <div class="demo-side">
+          <div class="side-h">Yang dipelajari</div>
+          <div class="tags"><span class="tag">Laravel / MVC</span><span class="tag">Database</span><span class="tag">Dashboard</span><span class="tag">REST API</span></div>
+          <div class="note">Data masuk → statistik otomatis terhitung. Inilah aplikasi nyata yang bisa dipakai sekolah.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- TABS ----------
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+function show(id){
+  panels.forEach(p=>p.classList.toggle('active',p.id===id));
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));
+  if(id==='demo-game') startGame(); else stopGame();
+}
+tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.target)));
+
+// ---------- 1. GAME ----------
+const cv=document.getElementById('gcanvas'), cx=cv.getContext('2d');
+let gp,items,score,lives,spawnT,raf=null,gameOver=false;
+function gReset(){gp={x:cv.width/2,w:90,h:22};items=[];score=0;lives=3;spawnT=0;gameOver=false;}
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();gp&&(gp.x=(e.clientX-r.left)*(cv.width/r.width));});
+const gkeys={l:false,r:false};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')gkeys.l=true;if(e.key==='ArrowRight')gkeys.r=true;});
+document.addEventListener('keyup',e=>{if(e.key==='ArrowLeft')gkeys.l=false;if(e.key==='ArrowRight')gkeys.r=false;});
+function star(x,y,r,c){cx.save();cx.translate(x,y);cx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/5*2*i-Math.PI/2,a2=a+Math.PI/5;cx.lineTo(Math.cos(a)*r,Math.sin(a)*r);cx.lineTo(Math.cos(a2)*r*.45,Math.sin(a2)*r*.45);}cx.closePath();cx.fillStyle=c;cx.fill();cx.restore();}
+function gLoop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  if(!gameOver){
+    if(gkeys.l)gp.x-=7;if(gkeys.r)gp.x+=7;
+    gp.x=Math.max(gp.w/2,Math.min(cv.width-gp.w/2,gp.x));
+    if(++spawnT>=Math.max(22,52-score*2)){spawnT=0;items.push({x:30+Math.random()*(cv.width-60),y:-20,t:Math.random()<.78?'s':'r',v:2.4+Math.random()*1.8+score*.05});}
+    for(let i=items.length-1;i>=0;i--){const it=items[i];it.y+=it.v;
+      const gy=cv.height-40;
+      if(it.y+18>gy&&it.x>gp.x-gp.w/2-6&&it.x<gp.x+gp.w/2+6){if(it.t==='s')score++;else lives--;items.splice(i,1);if(lives<=0)gameOver=true;continue;}
+      if(it.y>cv.height+20){items.splice(i,1);continue;}
+      if(it.t==='s')star(it.x,it.y,16,'#F4C430');else{cx.fillStyle='#9AA7B4';cx.beginPath();cx.arc(it.x,it.y,15,0,7);cx.fill();}
+    }
+    cx.fillStyle='#2F7FC4';const gy=cv.height-40;cx.fillRect(gp.x-gp.w/2,gy,gp.w,gp.h);
+    cx.fillStyle='#5BA3DC';cx.fillRect(gp.x-gp.w/2,gy,gp.w,7);
+    document.getElementById('ghud').textContent='Skor: '+score+' · Nyawa: '+'♥'.repeat(Math.max(0,lives))+'♡'.repeat(3-Math.max(0,lives))+' — mouse / panah ← →';
+  } else {
+    cx.fillStyle='rgba(22,58,95,.78)';cx.fillRect(0,0,cv.width,cv.height);
+    cx.fillStyle='#fff';cx.textAlign='center';
+    cx.font='bold 30px Calibri';cx.fillText('Hebat! Skor: '+score,cv.width/2,cv.height/2-10);
+    cx.font='16px Calibri';cx.fillText('Klik untuk main lagi',cv.width/2,cv.height/2+24);
+  }
+  raf=requestAnimationFrame(gLoop);
+}
+cv.addEventListener('click',()=>{if(gameOver)gReset();});
+function startGame(){if(raf)return;gReset();raf=requestAnimationFrame(gLoop);}
+function stopGame(){if(raf){cancelAnimationFrame(raf);raf=null;}}
+
+// ---------- 2. APP HP ----------
+let hafalan=[{n:'Al-Fatihah',s:'7 ayat',on:true},{n:'An-Naba',s:'40 ayat',on:true},{n:'An-Naziat',s:'46 ayat',on:false},{n:'Abasa',s:'42 ayat',on:false},{n:'At-Takwir',s:'29 ayat',on:false}];
+function renderHafalan(){
+  const box=document.getElementById('hflist');box.innerHTML='';
+  hafalan.forEach((h,i)=>{
+    const row=document.createElement('div');row.className='hf-row';
+    row.innerHTML='<div class="hf-check '+(h.on?'on':'')+'" onclick="toggleHf('+i+')">'+(h.on?'✓':'')+'</div><div><div class="hf-name">'+h.n+'</div><div class="hf-sub">'+h.s+'</div></div>';
+    box.appendChild(row);
+  });
+  const done=hafalan.filter(h=>h.on).length;
+  document.getElementById('hfbar').style.width=(done/hafalan.length*100)+'%';
+}
+function toggleHf(i){hafalan[i].on=!hafalan[i].on;renderHafalan();}
+function addHafalan(){const v=document.getElementById('hfinput').value.trim();if(!v)return;hafalan.push({n:v,s:'baru',on:false});document.getElementById('hfinput').value='';renderHafalan();}
+renderHafalan();
+
+// ---------- 4. ROBOT ----------
+let serialLines=[];
+function robotUpdate(){
+  const lux=+document.getElementById('lux').value;
+  const auto=document.getElementById('automode').checked;
+  document.getElementById('luxval').textContent=lux;
+  let on;
+  if(auto){on=lux<40;document.getElementById('modetxt').textContent='(diatur sensor)';}
+  else{on=true;document.getElementById('modetxt').textContent='(manual: nyala)';}
+  document.getElementById('bulb').classList.toggle('on',on);
+  const line='Cahaya: '+String(lux).padStart(3,' ')+'  →  Lampu: '+(on?'NYALA':'mati');
+  serialLines.push(line);if(serialLines.length>6)serialLines.shift();
+  document.getElementById('serial').textContent=serialLines.join('\n');
+}
+robotUpdate();
+
+// ---------- 5. WEB NGODING ----------
+const sholatTimes=[['Subuh','04:42'],['Dzuhur','11:54'],['Ashar','15:18'],['Maghrib','17:58'],['Isya','19:10']];
+function renderSholat(){
+  const now=new Date();const cur=now.getHours()*60+now.getMinutes();
+  let nextIdx=sholatTimes.findIndex(t=>{const[h,m]=t[1].split(':').map(Number);return h*60+m>cur;});
+  if(nextIdx<0)nextIdx=0;
+  document.getElementById('sholat').innerHTML=sholatTimes.map((t,i)=>'<div class="sholat'+(i===nextIdx?' next':'')+'"><span>'+t[0]+'</span><span>'+t[1]+'</span></div>').join('');
+}
+renderSholat();
+let ziyadah=[{n:'Ahmad',p:5},{n:'Fatimah',p:8},{n:'Yusuf',p:3}];
+function renderZi(){
+  const box=document.getElementById('zilist');
+  box.innerHTML=ziyadah.map((z,i)=>'<div class="zi-row"><span>'+z.n+' — <b>'+z.p+' hal</b></span><button onclick="delZi('+i+')">hapus</button></div>').join('');
+  document.getElementById('zitotal').textContent='Total: '+ziyadah.reduce((a,z)=>a+z.p,0)+' halaman';
+}
+function addZi(){const n=document.getElementById('ziname').value.trim();const p=+document.getElementById('zipage').value;if(!n||!p)return;ziyadah.push({n,p});document.getElementById('ziname').value='';document.getElementById('zipage').value='';renderZi();}
+function delZi(i){ziyadah.splice(i,1);renderZi();}
+renderZi();
+
+// ---------- 6. CAPSTONE ----------
+let infaq=[{n:'Kelas 7A',a:150000},{n:'Kelas 8B',a:225000},{n:'Kelas 9A',a:180000}];
+function rupiah(n){return 'Rp'+n.toLocaleString('id-ID');}
+function renderInfaq(){
+  document.getElementById('cBody').innerHTML=infaq.map(x=>'<tr><td>'+x.n+'</td><td class="num">'+rupiah(x.a)+'</td></tr>').join('');
+  const total=infaq.reduce((a,x)=>a+x.a,0);
+  document.getElementById('cTotal').textContent=rupiah(total);
+  document.getElementById('cCount').textContent=infaq.length;
+  document.getElementById('cAvg').textContent=rupiah(infaq.length?Math.round(total/infaq.length):0);
+}
+function addInfaq(){const n=document.getElementById('cName').value.trim();const a=+document.getElementById('cAmt').value;if(!n||!a)return;infaq.push({n,a});document.getElementById('cName').value='';document.getElementById('cAmt').value='';renderInfaq();}
+renderInfaq();
+
+// start default
+startGame();
+</script>
+</body>
+</html>
