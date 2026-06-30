@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Board · PM Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ CONFIG TOKENS ============ */
+  :root{
+    --board:#10161d;          /* deep ink board */
+    --board-2:#0b0f14;
+    --lane:#161e27;           /* lane surface */
+    --lane-line:#243140;      /* lane divider */
+    --paper:#f6f2e9;          /* warm paper ticket */
+    --paper-edge:#e6dECA;
+    --ink:#23201b;            /* text on paper */
+    --ink-soft:#6f6a5e;
+    --chrome:#8a98a8;         /* muted ui text on board */
+    --chrome-dim:#56636f;
+    /* status accents — meaningful, not neon */
+    --todo:#7d8aa0;
+    --prog:#e0a33e;
+    --done:#4f9e6f;
+    --block:#d2603a;
+    --live:#5ec98a;
+    --display:"Bricolage Grotesque", system-ui, sans-serif;
+    --body:"Hanken Grotesk", system-ui, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    color:var(--chrome);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #18222d 0%, transparent 60%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ============ HEADER ============ */
+  header{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:24px; flex-wrap:wrap;
+    padding:26px clamp(18px,3vw,40px) 18px;
+    border-bottom:1px solid var(--lane-line);
+  }
+  .title-block{display:flex; flex-direction:column; gap:4px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--chrome-dim);
+  }
+  h1{
+    font-family:var(--display); font-weight:800;
+    font-size:clamp(28px,4.4vw,46px); line-height:.95;
+    color:#eef2f6; margin:0; letter-spacing:-.01em;
+  }
+  h1 .claw{color:var(--prog);}
+
+  .status-rail{display:flex; align-items:center; gap:22px;}
+  .total{display:flex; flex-direction:column; align-items:flex-end; gap:2px;}
+  .total .n{font-family:var(--display); font-weight:800; font-size:34px; color:#eef2f6; line-height:1;}
+  .total .l{font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--chrome-dim);}
+
+  /* sync ring — the signature live element */
+  .sync{position:relative; width:54px; height:54px; flex:none;}
+  .sync .ring{
+    position:absolute; inset:0; border-radius:50%;
+    background:conic-gradient(var(--live) var(--p,0%), #223 0 100%);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+            mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+    transition:background .25s linear;
+  }
+  .sync .dot{
+    position:absolute; inset:0; margin:auto; width:9px; height:9px; border-radius:50%;
+    background:var(--live);
+  }
+  .sync.pulse .dot{animation:beat .9s ease-out;}
+  @keyframes beat{0%{box-shadow:0 0 0 0 rgba(94,201,138,.55);}100%{box-shadow:0 0 0 16px rgba(94,201,138,0);}}
+  .clock{font-family:var(--mono); font-size:12px; color:var(--chrome); display:flex; flex-direction:column; gap:3px; min-width:118px;}
+  .clock .live-tag{display:flex; align-items:center; gap:6px; color:var(--live); font-weight:600; letter-spacing:.04em;}
+  .clock .live-tag b{width:6px;height:6px;border-radius:50%;background:var(--live);display:inline-block;}
+  .clock .upd{color:var(--chrome-dim);}
+
+  /* ============ CONFIG BAR ============ */
+  .config{
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    padding:12px clamp(18px,3vw,40px);
+    border-bottom:1px solid var(--lane-line);
+    font-family:var(--mono); font-size:12px;
+  }
+  .config label{color:var(--chrome-dim); letter-spacing:.1em; text-transform:uppercase; font-size:10px;}
+  .config input{
+    font-family:var(--mono); font-size:12px; color:#eef2f6;
+    background:var(--board-2); border:1px solid var(--lane-line);
+    border-radius:7px; padding:8px 11px; min-width:300px; flex:1;
+  }
+  .config input:focus{outline:2px solid var(--prog); outline-offset:1px; border-color:transparent;}
+  .config button{
+    font-family:var(--mono); font-size:12px; font-weight:600; cursor:pointer;
+    color:var(--board); background:var(--prog); border:none;
+    border-radius:7px; padding:9px 16px; letter-spacing:.03em;
+  }
+  .config button:hover{filter:brightness(1.07);}
+  .config .hint{color:var(--chrome-dim); width:100%; font-size:11px; line-height:1.5;}
+
+  /* ============ BOARD ============ */
+  main{flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--lane-line); overflow:hidden;}
+  .lane{background:var(--lane); display:flex; flex-direction:column; min-height:0;}
+  .lane-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px 12px; position:sticky; top:0; background:var(--lane); z-index:2;
+  }
+  .lane-head .name{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; display:flex; align-items:center; gap:9px;}
+  .lane-head .name::before{content:""; width:9px; height:9px; border-radius:2px; background:var(--accent);}
+  .lane-head .cnt{font-family:var(--display); font-weight:800; font-size:18px; color:var(--chrome);}
+  .lane[data-status="todo"]{--accent:var(--todo);}
+  .lane[data-status="inprogress"]{--accent:var(--prog);}
+  .lane[data-status="done"]{--accent:var(--done);}
+  .lane[data-status="blocked"]{--accent:var(--block);}
+  .lane-head .name{color:var(--accent);}
+
+  .stack{padding:4px 14px 22px; overflow-y:auto; display:flex; flex-direction:column; gap:11px; flex:1;}
+  .stack::-webkit-scrollbar{width:8px;}
+  .stack::-webkit-scrollbar-thumb{background:#2b3845; border-radius:8px;}
+
+  /* paper ticket */
+  .card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:5px;
+    border-left:5px solid var(--accent);
+    padding:13px 14px 12px;
+    box-shadow:0 1px 0 var(--paper-edge), 0 6px 14px rgba(0,0,0,.28);
+    position:relative;
+  }
+  .card .tk{font-family:var(--body); font-weight:600; font-size:15px; line-height:1.3; margin:0 0 9px;}
+  .card .meta{display:flex; flex-wrap:wrap; gap:6px 12px; font-family:var(--mono); font-size:11px; color:var(--ink-soft);}
+  .card .meta .owner{color:var(--ink); font-weight:600;}
+  .card .meta .id{color:#a9a294;}
+  .card .notes{margin:8px 0 0; font-size:12px; color:var(--ink-soft); line-height:1.4; border-top:1px dashed var(--paper-edge); padding-top:7px;}
+  .card.is-new{animation:drop .45s cubic-bezier(.2,.8,.2,1);}
+  @keyframes drop{0%{opacity:0; transform:translateY(-10px) scale(.98);}100%{opacity:1; transform:none;}}
+
+  .empty{font-family:var(--mono); font-size:11px; color:var(--chrome-dim); padding:14px; text-align:center; letter-spacing:.04em;}
+
+  /* error / loading banner */
+  .banner{
+    margin:0; padding:14px clamp(18px,3vw,40px);
+    font-family:var(--mono); font-size:12.5px; line-height:1.5;
+    background:#2a1a14; color:#f3c9b6; border-bottom:1px solid #4a2a1c;
+    display:none;
+  }
+  .banner.show{display:block;}
+  .banner b{color:#ffd9c5;}
+
+  @media (max-width:860px){
+    main{grid-template-columns:1fr 1fr;}
+    .config input{min-width:0;}
+  }
+  @media (max-width:520px){
+    main{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card.is-new{animation:none;}
+    .sync.pulse .dot{animation:none;}
+    .sync .ring{transition:none;}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="title-block">
+      <span class="eyebrow">PM Agent · OpenClaw</span>
+      <h1>Task<span class="claw">·</span>Board</h1>
+    </div>
+    <div class="status-rail">
+      <div class="total"><span class="n" id="total">0</span><span class="l">total task</span></div>
+      <div class="clock">
+        <span class="live-tag"><b></b> LIVE</span>
+        <span class="upd" id="updated">menunggu data…</span>
+      </div>
+      <div class="sync" id="sync" title="Sinkron otomatis tiap 5 detik">
+        <div class="ring"></div><div class="dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="config">
+    <label for="sid">Sheet ID</label>
+    <input id="sid" placeholder="tempel Spreadsheet ID dari URL Google Sheet" spellcheck="false">
+    <label for="tab">Tab</label>
+    <input id="tab" value="Sheet1" style="min-width:90px; flex:none; width:120px;">
+    <button id="apply">Hubungkan</button>
+    <p class="hint">Sheet harus dibagikan <b>Anyone with the link → Viewer</b>. Kolom: ID · Task · Owner · Status · Due · Notes. Papan menyinkron otomatis tiap 5 detik.</p>
+  </div>
+
+  <p class="banner" id="banner"></p>
+
+  <main id="board">
+    <section class="lane" data-status="todo"><div class="lane-head"><span class="name">Todo</span><span class="cnt">0</span></div><div class="stack"></div></section>
+    <section class="lane" data-status="inprogress"><div class="lane-head"><span class="name">In Progress</span><span class="cnt">0</span></div><div class="stack"></div></section>
+    <section class="lane" data-status="done"><div class="lane-head"><span class="name">Done</span><span class="cnt">0</span></div><div class="stack"></div></section>
+    <section class="lane" data-status="blocked"><div class="lane-head"><span class="name">Blocked</span><span class="cnt">0</span></div><div class="stack"></div></section>
+  </main>
+
+<script>
+/* ============================================================
+   CONFIG — isi SHEET_ID di sini supaya papan langsung jalan
+   saat di-host (tanpa harus ketik tiap buka). Atau biarkan
+   kosong dan isi lewat kotak di atas.
+   ============================================================ */
+const CONFIG = {
+  SHEET_ID: "",      // contoh: "1AbcD...XyZ"  (ambil dari URL sheet)
+  TAB: "Sheet1",
+  REFRESH_MS: 5000
+};
+
+const STATUS_MAP = [
+  { key:"inprogress", test:/progress|jalan|proses/i },
+  { key:"done",       test:/done|selesai|complete/i },
+  { key:"blocked",    test:/block|stuck|terhambat/i },
+  { key:"todo",       test:/.*/ }            // fallback
+];
+function normStatus(s){
+  s = (s||"").trim();
+  for(const m of STATUS_MAP){ if(m.test.test(s)) return m.key; }
+  return "todo";
+}
+
+const $ = sel => document.querySelector(sel);
+const lanes = {
+  todo: $('.lane[data-status="todo"]'),
+  inprogress: $('.lane[data-status="inprogress"]'),
+  done: $('.lane[data-status="done"]'),
+  blocked: $('.lane[data-status="blocked"]')
+};
+let seenIds = new Set();
+let firstLoad = true;
+
+/* minimal CSV parser (handles quoted fields, escaped quotes, CRLF) */
+function parseCSV(text){
+  const rows=[]; let row=[], field='', inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else inQ=false; }
+      else field+=c;
+    }else{
+      if(c==='"') inQ=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else if(c!=='\r') field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+
+function indexBy(headers){
+  const h = headers.map(x=>x.trim().toLowerCase());
+  return name => h.indexOf(name);
+}
+
+function banner(msg){
+  const b=$('#banner');
+  if(!msg){ b.classList.remove('show'); b.innerHTML=''; return; }
+  b.innerHTML=msg; b.classList.add('show');
+}
+
+function render(tasks){
+  const buckets={todo:[],inprogress:[],done:[],blocked:[]};
+  tasks.forEach(t=>buckets[normStatus(t.status)].push(t));
+
+  let total=0;
+  for(const key in lanes){
+    const stack=lanes[key].querySelector('.stack');
+    const cnt=lanes[key].querySelector('.cnt');
+    const items=buckets[key];
+    total+=items.length;
+    cnt.textContent=items.length;
+    stack.innerHTML='';
+    if(!items.length){ stack.innerHTML='<div class="empty">— kosong —</div>'; continue; }
+    items.forEach(t=>{
+      const card=document.createElement('article');
+      card.className='card';
+      const isNew = !firstLoad && t.id && !seenIds.has(t.id);
+      if(isNew) card.classList.add('is-new');
+      card.innerHTML=`
+        <p class="tk">${esc(t.task)||'(tanpa judul)'}</p>
+        <div class="meta">
+          ${t.owner?`<span class="owner">@${esc(t.owner)}</span>`:''}
+          ${t.due?`<span>📅 ${esc(t.due)}</span>`:''}
+          ${t.id?`<span class="id">#${esc(t.id)}</span>`:''}
+        </div>
+        ${t.notes?`<p class="notes">${esc(t.notes)}</p>`:''}`;
+      stack.appendChild(card);
+    });
+  }
+  $('#total').textContent=total;
+  seenIds = new Set(tasks.map(t=>t.id).filter(Boolean));
+  firstLoad=false;
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+async function fetchSheet(){
+  const id=CONFIG.SHEET_ID, tab=encodeURIComponent(CONFIG.TAB||'Sheet1');
+  if(!id){ banner('Belum ada <b>Sheet ID</b>. Tempel di kotak atas lalu klik Hubungkan.'); return; }
+  const url=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${tab}`;
+  try{
+    const res=await fetch(url,{cache:'no-store'});
+    const text=await res.text();
+    if(!res.ok || text.trim().startsWith('<')){
+      banner('Tidak bisa baca sheet. Pastikan <b>Sheet ID benar</b> dan sharing diset <b>Anyone with the link → Viewer</b>.');
+      return;
+    }
+    banner('');
+    const rows=parseCSV(text).filter(r=>r.length>1 || (r.length===1 && r[0].trim()!==''));
+    if(!rows.length){ render([]); markUpdated(); return; }
+    const idx=indexBy(rows[0]);
+    const ci={id:idx('id'),task:idx('task'),owner:idx('owner'),status:idx('status'),due:idx('due'),notes:idx('notes')};
+    const tasks=rows.slice(1).map(r=>({
+      id:(r[ci.id]||'').trim(),
+      task:(r[ci.task]||'').trim(),
+      owner:(r[ci.owner]||'').trim(),
+      status:(r[ci.status]||'').trim(),
+      due:(r[ci.due]||'').trim(),
+      notes:(r[ci.notes]||'').trim()
+    })).filter(t=>t.task||t.id);
+    render(tasks);
+    markUpdated();
+  }catch(e){
+    banner('Gagal terhubung ke Google Sheet. Cek koneksi, lalu pastikan halaman ini dibuka lewat <b>http://</b> (bukan file://) agar tidak diblokir browser.');
+  }
+}
+
+function markUpdated(){
+  const t=new Date();
+  $('#updated').textContent='diperbarui '+t.toLocaleTimeString('id-ID');
+  const s=$('#sync'); s.classList.remove('pulse'); void s.offsetWidth; s.classList.add('pulse');
+}
+
+/* sync ring countdown */
+let tick=0;
+function loop(){
+  tick+=250;
+  const p=Math.min(100,(tick/CONFIG.REFRESH_MS)*100);
+  $('#sync .ring').style.setProperty('--p',p+'%');
+  if(tick>=CONFIG.REFRESH_MS){ tick=0; fetchSheet(); }
+}
+
+/* config wiring */
+$('#sid').value=CONFIG.SHEET_ID;
+$('#tab').value=CONFIG.TAB;
+$('#apply').addEventListener('click',()=>{
+  CONFIG.SHEET_ID=$('#sid').value.trim();
+  CONFIG.TAB=$('#tab').value.trim()||'Sheet1';
+  firstLoad=true; seenIds=new Set(); tick=0; fetchSheet();
+});
+$('#sid').addEventListener('keydown',e=>{if(e.key==='Enter')$('#apply').click();});
+
+fetchSheet();
+setInterval(loop,250);
+</script>
+</body>
+</html>
