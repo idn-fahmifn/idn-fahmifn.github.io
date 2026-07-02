@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gigahome - Internet Fiber Optic Rumahan</title>
+<style>
+  :root{
+    --blue:#1e6df0;
+    --blue-dark:#1454c9;
+    --navy:#1c2431;
+    --green:#1f8a4c;
+    --yellow:#f5b301;
+    --text-dark:#1a1f2b;
+    --text-gray:#5b6472;
+    --bg-light:#f4f6fa;
+    --border:#e7eaf0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Segoe UI', Arial, sans-serif; color:var(--text-dark); line-height:1.5;}
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  .container{max-width:1140px;margin:0 auto;padding:0 24px;}
+  section[id], footer[id]{scroll-margin-top:90px;}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;max-width:1140px;margin:0 auto;padding-left:24px;padding-right:24px;}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;color:var(--text-dark);}
+  .logo span{color:var(--blue);}
+  .logo .dot{width:22px;height:22px;border-radius:50%;background:conic-gradient(var(--blue) 0 60%, #cfe0fd 60% 100%);display:inline-block;}
+  nav ul{display:flex;gap:32px;font-size:15px;color:#333;}
+  nav ul li a:hover{color:var(--blue);}
+  .btn-outline{border:1.5px solid var(--blue);color:var(--blue);padding:9px 20px;border-radius:24px;font-size:14px;font-weight:600;transition:transform .25s ease, background .25s ease, color .25s ease;display:inline-block;}
+  .btn-outline:hover{transform:translateY(-2px) scale(1.04);}
+  .btn-outline:hover{background:var(--blue);color:#fff;}
+
+  /* Hero (simple, half viewport) */
+  .hero{background:linear-gradient(180deg,#eef4ff 0%, var(--bg-light) 100%);position:relative;overflow:hidden;text-align:center;min-height:50vh;display:flex;align-items:center;padding-bottom:170px;}
+  .hero::before{content:"";position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,#cfe0fd 0%,rgba(207,224,253,0) 70%);}
+  .hero-inner{max-width:720px;margin:0 auto;padding:24px 24px 0;position:relative;width:100%;animation:heroFadeIn .8s ease both;}
+  @keyframes heroFadeIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);color:var(--blue);font-size:12.5px;font-weight:700;padding:7px 16px;border-radius:20px;margin-bottom:20px;}
+  .eyebrow .dot2{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulseDot 1.8s ease-in-out infinite;}
+  @keyframes pulseDot{
+    0%,100%{box-shadow:0 0 0 0 rgba(31,138,76,.5);}
+    50%{box-shadow:0 0 0 6px rgba(31,138,76,0);}
+  }
+  .hero h1{font-size:38px;font-weight:800;line-height:1.2;color:var(--text-dark);}
+  .hero h1 .accent{color:var(--blue);}
+  .hero p{margin:16px auto 0;font-size:15.5px;color:var(--text-gray);max-width:480px;}
+  .hero-cta{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap;justify-content:center;}
+  .btn-primary{display:inline-block;background:var(--blue);color:#fff;padding:14px 28px;border-radius:8px;font-weight:700;font-size:14px;letter-spacing:.3px;transition:transform .25s ease, background .25s ease;}
+  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px) scale(1.03);}
+  .btn-ghost{display:inline-block;padding:14px 24px;border-radius:8px;font-weight:700;font-size:14px;color:var(--text-dark);border:1.5px solid var(--border);background:#fff;transition:transform .25s ease, border-color .25s ease, color .25s ease;}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px) scale(1.03);}
+
+  /* About (below product) */
+  .about{padding:70px 0;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+  .about h2{font-size:28px;font-weight:800;margin-bottom:18px;}
+  .about h2 .accent{color:var(--blue);}
+  .about p{font-size:14.5px;color:var(--text-gray);margin-bottom:16px;}
+  .about strong{color:var(--text-dark);}
+  .about-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+  .about-chips span{background:var(--bg-light);border:1px solid var(--border);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:10px;color:var(--text-dark);}
+  .about-chips span b{color:var(--blue);}
+  .hero-art{display:flex;justify-content:center;align-items:center;position:relative;}
+  .hero-art .glow{position:absolute;width:260px;height:260px;background:radial-gradient(circle,#cfe0fd 0%,rgba(207,224,253,0) 72%);border-radius:50%;}
+  .hero-art svg{width:100%;max-width:300px;position:relative;filter:drop-shadow(0 20px 30px rgba(30,109,240,.15));animation:floatY 4s ease-in-out infinite;}
+  @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .hero-badge{position:absolute;bottom:0;left:calc(50% - 95px);background:#fff;border:1px solid var(--border);border-radius:12px;padding:9px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(20,30,50,.08);}
+  .hero-badge .ic{width:8px;height:8px;border-radius:50%;background:var(--green);}
+
+  /* Why section */
+  .why{padding:70px 0 40px;text-align:center;}
+  .why h2{font-size:28px;font-weight:800;margin-bottom:40px;}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .why-card{border:1px solid var(--border);border-radius:14px;padding:34px 24px;text-align:center;transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;}
+  .why-card:hover{transform:translateY(-6px);box-shadow:0 18px 34px rgba(15,25,50,.10);border-color:transparent;}
+  .why-card .icon{width:44px;height:44px;margin:0 auto 16px;color:var(--blue);transition:transform .3s ease;}
+  .why-card:hover .icon{transform:scale(1.15);}
+  .why-card h3{font-size:17px;font-weight:700;margin-bottom:10px;}
+  .why-card p{font-size:14px;color:var(--text-gray);}
+
+  /* Pricing (floating over hero) */
+  .pricing{padding:0 0 70px;text-align:center;background:transparent;margin-top:-130px;position:relative;z-index:5;}
+  .pricing h2{font-size:24px;font-weight:800;color:var(--text-dark);}
+  .pricing > .container > p{color:var(--text-gray);margin-top:8px;margin-bottom:34px;font-size:14px;}
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
+  .price-card{border:1px solid var(--border);border-radius:16px;padding:30px 26px;text-align:left;position:relative;display:flex;flex-direction:column;background:#fff;box-shadow:0 24px 48px rgba(15,25,50,.18);transition:transform .3s ease, box-shadow .3s ease;}
+  .price-card:hover{transform:translateY(-8px);box-shadow:0 32px 60px rgba(15,25,50,.24);}
+  .price-card.promo{border-color:var(--green);}
+  .price-card.premium{background:var(--blue);color:#fff;border:none;box-shadow:0 24px 48px rgba(20,60,160,.35);}
+  .price-card.premium:hover{box-shadow:0 32px 60px rgba(20,60,160,.45);}
+  .badge{position:absolute;top:-14px;left:24px;background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:14px;}
+  .badge.best{background:var(--yellow);color:#1a1f2b;left:auto;right:24px;}
+  .price-card .brand{font-weight:800;font-size:15px;margin-bottom:4px;}
+  .price-card.promo .brand{color:var(--green);}
+  .price-card .plan-label{font-weight:700;font-size:16px;color:var(--blue);margin-bottom:10px;}
+  .price-card.premium .plan-label{color:#fff;opacity:.9;font-size:13px;font-weight:600;}
+  .price-card .speed{font-size:38px;font-weight:800;margin-bottom:14px;}
+  .price-card .speed span{font-size:16px;font-weight:600;}
+  .price-card hr{border:none;border-top:1px solid rgba(0,0,0,.08);margin-bottom:14px;}
+  .price-card.premium hr{border-top:1px solid rgba(255,255,255,.25);}
+  .price-card ul{margin-bottom:20px;flex-grow:1;}
+  .price-card ul li{font-size:13.5px;margin-bottom:8px;display:flex;gap:8px;align-items:flex-start;color:var(--text-gray);}
+  .price-card.premium ul li{color:rgba(255,255,255,.9);}
+  .price-card .check{color:var(--green);font-weight:700;}
+  .price-card.premium .check{color:#fff;}
+  .price-card .price-label{font-size:13px;color:var(--text-gray);}
+  .price-card.premium .price-label{color:rgba(255,255,255,.8);}
+  .price-card .price{font-size:26px;font-weight:800;margin:4px 0 16px;}
+  .price-card.promo .price{color:var(--green);}
+  .price-card .price small{font-size:14px;font-weight:500;color:var(--text-gray);}
+  .price-card.premium .price small{color:rgba(255,255,255,.8);}
+  .cta-btn{display:block;text-align:center;padding:12px;border-radius:8px;font-weight:700;font-size:14px;transition:transform .25s ease, filter .25s ease;}
+  .cta-btn:hover{transform:translateY(-2px);filter:brightness(1.05);}
+  .cta-btn.green{background:var(--green);color:#fff;}
+  .cta-btn.outline{border:1.5px solid var(--blue);color:var(--blue);}
+  .cta-btn.white{background:#fff;color:var(--blue);}
+  .promo-note{text-align:center;font-size:11.5px;color:#d64545;margin-top:10px;}
+
+  /* Business packages (merged into pricing section) */
+  .biz-subhead{margin-top:56px;padding-top:44px;border-top:1px solid var(--border);text-align:center;}
+  .biz-subhead h3{font-size:22px;font-weight:800;margin-bottom:8px;color:var(--text-dark);}
+  .biz-subhead p{color:var(--text-gray);font-size:14px;margin-bottom:34px;}
+  .biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto;}
+  .biz-card{background:#fff;color:var(--text-dark);border-radius:16px;padding:30px 28px;position:relative;text-align:left;border:1px solid var(--border);box-shadow:0 10px 26px rgba(15,25,50,.06);transition:transform .3s ease, box-shadow .3s ease;}
+  .biz-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(15,25,50,.14);}
+  .biz-card.pro{border:2px solid var(--yellow);}
+  .biz-card h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+  .biz-card .speed{font-size:34px;font-weight:800;margin-bottom:6px;}
+  .biz-card .speed span{font-size:15px;font-weight:600;}
+  .biz-card .desc{font-size:13px;color:var(--text-gray);margin-bottom:14px;}
+  .biz-card hr{border:none;border-top:1px solid var(--border);margin-bottom:14px;}
+  .biz-card ul li{font-size:13.5px;margin-bottom:8px;color:var(--text-gray);display:flex;gap:8px;}
+  .biz-card ul{margin-bottom:18px;}
+  .biz-card .price-label{font-size:13px;color:var(--text-gray);}
+  .biz-card .price{font-size:24px;font-weight:800;margin:2px 0 16px;}
+  .biz-card .price small{font-size:13px;font-weight:500;color:var(--text-gray);}
+  .biz-btn{display:block;text-align:center;padding:11px;border-radius:8px;font-weight:700;font-size:13.5px;border:1.5px solid var(--blue);color:var(--blue);transition:transform .25s ease;}
+  .biz-btn:hover{transform:translateY(-2px);}
+  .biz-btn.solid{background:var(--yellow);color:#1a1f2b;border:none;}
+
+  /* Partners */
+  .partners{padding:50px 0;}
+  .partner-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;font-weight:700;font-size:15px;}
+  .partner-logo{color:#8a8f99;filter:grayscale(1);opacity:.6;font-weight:700;cursor:default;display:inline-block;transition:transform .35s cubic-bezier(.34,1.56,.64,1), color .35s ease, opacity .35s ease, filter .35s ease;}
+  .partner-logo:hover{filter:grayscale(0);opacity:1;transform:scale(1.18);}
+  .partner-logo.p-cisco:hover{color:#049fd9;}
+  .partner-logo.p-huawei:hover{color:#cf0a2c;}
+  .partner-logo.p-google:hover{color:#4285f4;}
+  .partner-logo.p-mikrotik:hover{color:#e08e00;}
+  .partner-logo.p-juniper:hover{color:#84b135;}
+
+  /* Stats */
+  .stats{padding:50px 0;background:#fff;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
+  .stat-item .num{font-size:32px;font-weight:800;color:var(--blue);}
+  .stat-item .label{font-size:13px;color:var(--text-gray);margin-top:6px;}
+
+  /* Steps (Cara Berlangganan) */
+  .steps{padding:70px 0;text-align:center;background:var(--bg-light);}
+  .steps h2{font-size:28px;font-weight:800;margin-bottom:10px;}
+  .steps > .container > p{color:var(--text-gray);margin-bottom:44px;}
+  .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .step-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px 20px;text-align:left;transition:transform .3s ease, box-shadow .3s ease;}
+  .step-item:hover{transform:translateY(-6px);box-shadow:0 18px 34px rgba(15,25,50,.10);}
+  .step-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;transition:transform .3s ease;}
+  .step-item:hover .step-num{transform:scale(1.15) rotate(-8deg);}
+  .step-item h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+  .step-item p{font-size:13px;color:var(--text-gray);}
+
+  /* Coverage check (compact, lives inside hero) */
+  .hero-coverage{display:flex;gap:10px;max-width:420px;margin:22px auto 0;flex-wrap:wrap;justify-content:center;}
+  .hero-coverage input{flex:1;min-width:220px;padding:12px 16px;border-radius:8px;border:1px solid var(--border);font-size:13.5px;font-family:inherit;background:#fff;}
+  .hero-coverage input:focus{outline:none;border-color:var(--blue);}
+  .hero-coverage button{padding:12px 20px;border-radius:8px;background:var(--text-dark);color:#fff;border:none;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap;}
+  .hero-coverage button:hover{background:#000;}
+  .coverage-result{margin-top:12px;font-size:13px;font-weight:600;min-height:18px;max-width:460px;margin-left:auto;margin-right:auto;}
+  .coverage-result.ok{color:var(--green);}
+  .coverage-result.no{color:#c0392b;}
+  .coverage-result.pending{color:var(--text-gray);}
+
+  /* Scroll reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* FAQ */
+  .faq{padding:70px 0;background:var(--bg-light);}
+  .faq h2{font-size:28px;font-weight:800;text-align:center;margin-bottom:40px;}
+  .faq-list{max-width:720px;margin:0 auto;}
+  .faq-item{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;background:#fff;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:18px 22px;font-weight:700;font-size:14.5px;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--text-dark);font-family:inherit;}
+  .faq-q .plus{font-size:20px;color:var(--blue);transition:transform .2s;line-height:1;}
+  .faq-item.open .faq-q .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 22px;}
+  .faq-item.open .faq-a{max-height:200px;padding-bottom:18px;}
+  .faq-a p{font-size:13.5px;color:var(--text-gray);}
+
+  /* CTA Banner */
+  .cta-banner{background:var(--blue);color:#fff;padding:60px 0;text-align:center;}
+  .cta-banner h2{font-size:26px;font-weight:800;margin-bottom:12px;}
+  .cta-banner p{font-size:14.5px;color:rgba(255,255,255,.85);margin-bottom:26px;max-width:480px;margin-left:auto;margin-right:auto;}
+  .cta-banner .hero-cta{justify-content:center;}
+  .cta-banner .btn-primary{background:#fff;color:var(--blue);}
+  .cta-banner .btn-primary:hover{background:#eef4ff;}
+  .cta-banner .btn-ghost{background:transparent;border-color:rgba(255,255,255,.4);color:#fff;}
+  .cta-banner .btn-ghost:hover{background:rgba(255,255,255,.12);border-color:#fff;}
+
+  /* Testimonials Carousel */
+  .testimonials{padding:20px 0 70px;text-align:center;}
+  .testimonials h2{font-size:26px;font-weight:800;margin-bottom:36px;}
+  .testi-carousel{display:flex;align-items:center;gap:16px;max-width:700px;margin:0 auto;}
+  .testi-arrow{width:42px;height:42px;min-width:42px;border-radius:50%;border:1px solid var(--border);background:#fff;font-size:20px;line-height:1;cursor:pointer;color:var(--blue);display:flex;align-items:center;justify-content:center;transition:.2s;}
+  .testi-arrow:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .testi-track-wrap{overflow:hidden;width:100%;}
+  .testi-track{display:flex;transition:transform .45s ease;}
+  .testi-slide{min-width:100%;box-sizing:border-box;padding:0 4px;}
+  .testi-card{border:1px solid var(--border);border-radius:16px;padding:40px;background:#fff;transition:transform .3s ease, box-shadow .3s ease;}
+  .testi-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px rgba(15,25,50,.10);}
+  .testi-card .quote{color:var(--blue);font-size:34px;font-weight:800;margin-bottom:14px;}
+  .testi-card p{font-style:italic;font-size:15px;color:#333;margin-bottom:18px;}
+  .testi-card .name{font-weight:700;}
+  .testi-card .role{font-size:13px;color:var(--text-gray);}
+  .testi-dots{display:flex;justify-content:center;gap:8px;margin-top:22px;}
+  .testi-dots button{width:8px;height:8px;padding:0;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:.2s;}
+  .testi-dots button.active{background:var(--blue);width:22px;border-radius:5px;}
+
+  /* Footer */
+  footer{background:var(--navy);color:#cfd4dc;padding:50px 0 0;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:36px;}
+  footer h4{color:#fff;font-size:16px;margin-bottom:14px;}
+  footer h4.brand{color:var(--blue);}
+  footer p, footer li, footer a{font-size:13.5px;color:#aeb5c1;margin-bottom:6px;}
+  footer li{margin-bottom:10px;}
+  .footer-note{font-size:12px;color:#8a92a1;margin-top:14px;line-height:1.6;}
+  .footer-bottom{border-top:1px solid #2c3444;text-align:center;padding:20px 0;font-size:12.5px;color:#8a92a1;}
+
+  @media(max-width:860px){
+    nav{display:none;}
+    .about-grid{grid-template-columns:1fr;}
+    .why-grid, .price-grid{grid-template-columns:1fr;}
+    .biz-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;}
+    .stats-grid{grid-template-columns:1fr 1fr;gap:30px;}
+    .steps-grid{grid-template-columns:1fr;}
+    .hero{min-height:auto;padding-bottom:120px;}
+    .hero h1{font-size:28px;}
+    .hero-badge{position:static;margin-top:14px;}
+    .pricing{margin-top:-90px;}
+    .price-card{box-shadow:0 16px 32px rgba(15,25,50,.16);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"> <img src="https://terahome.id/asset/images/logo-giganet.png" width="20" alt=""> GIGA<span>HOME</span></div>
+  <nav><ul>
+    <li><a href="#tentang">Tentang</a></li>
+    <li><a href="#paket">Produk</a></li>
+    <li><a href="#testimoni">Testimoni</a></li>
+    <li><a href="#informasi">Informasi</a></li>
+  </ul></nav>
+  <a href="#" class="btn-outline">Hubungi Kami</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow"><span class="dot2"></span>100% Jaringan Fiber Optik</span>
+    <h1>Kecepatan Maksimal, <span class="accent">Latency Minimal.</span></h1>
+    <p>Nikmati streaming 4K, gaming tanpa lag, dan kerja WFH tanpa hambatan dengan jaringan Fiber Optik Giga Home.</p>
+    <div class="hero-cta">
+      <a href="#paket" class="btn-primary">Lihat Paket Internet</a>
+      <a href="#tentang" class="btn-ghost">Tentang Kami</a>
+    </div>
+    <form class="hero-coverage" id="coverageForm">
+      <input type="text" id="coverageInput" placeholder="Cek area: contoh Lasem, Rembang" required>
+      <button type="submit">Cek Area</button>
+    </form>
+    <div class="coverage-result" id="coverageResult"></div>
+  </div>
+</section>
+
+<section class="pricing" id="paket">
+  <div class="container">
+    <h2>Paket Internet Rumahan Cepat</h2>
+    <p>Pilih kecepatan yang sesuai untuk kebutuhan streaming dan WFH harian.</p>
+    <div class="price-grid reveal">
+
+      <div class="price-card promo">
+        <span class="badge">PROMO HINGGA AKHIR BULAN!</span>
+        <div class="brand">GIGA HOME</div>
+        <div class="plan-label">GRATIS Biaya Pemasangan</div>
+
+        <div class="speed">100<span>Mbps</span></div>
+        <hr>
+        <ul>
+          <li><span class="check">✔</span> 100% Fiber Optic</li>
+          <li><span class="check">✔</span> Router Dual Band 5G</li>
+          <li><span class="check">✔</span> Unlimited</li>
+        </ul>
+        <div class="price-label">Hanya</div>
+        <div class="price">Rp 100.000<small>/bulan</small></div>
+        <a href="#" class="cta-btn green">PILIH PROMO INI</a>
+        <div class="promo-note">Promo Berlaku di Area Tertentu</div>
+      </div>
+
+      <div class="price-card">
+        <div class="plan-label">STARTER</div>
+        <p style="font-size:13px;color:var(--text-gray);margin-bottom:14px;">Ideal untuk keluarga kecil &amp; WFH.</p>
+        <div class="speed">100<span>Mbps</span></div>
+        <hr>
+        <ul>
+          <li><span class="check">✔</span> Up To Speed</li>
+          <li><span class="check">✔</span> Unlimited Data (Tanpa FUP)</li>
+          <li><span class="check">✔</span> Cocok 5 - 7 perangkat</li>
+        </ul>
+        <div class="price-label">Hanya</div>
+        <div class="price">Rp 100.000<small>/bulan</small></div>
+        <a href="#" class="cta-btn outline">Daftar Sekarang</a>
+      </div>
+
+      <div class="price-card premium">
+        <span class="badge best">BEST VALUE</span>
+        <div class="plan-label">Maksimal untuk gaming dan streaming 4K.</div>
+        <div class="speed">200<span>Mbps</span></div>
+        <hr>
+        <ul>
+          <li><span class="check">✔</span> Up To Speed</li>
+          <li><span class="check">✔</span> Unlimited Data (Tanpa FUP)</li>
+          <li><span class="check">✔</span> Cocok untuk 7 - 12 perangkat</li>
+          <li><span class="check">✔</span> Support IPTV</li>
+        </ul>
+        <div class="price-label">Hanya</div>
+        <div class="price">Rp 200.000<small>/bulan</small></div>
+        <a href="#" class="cta-btn white">Pesan Paket PREMIUM</a>
+      </div>
+
+    </div>
+
+    <div class="biz-subhead">
+      <h3>Solusi Dedicated Internet untuk Bisnis</h3>
+      <p>Koneksi Simetris 1:1 dan Jaminan SLA Tinggi untuk kebutuhan operasional perusahaan.</p>
+    </div>
+    <div class="biz-grid reveal">
+      <div class="biz-card">
+        <h3>Paket Bisnis</h3>
+        <div class="speed">500<span>Mbps</span></div>
+        <div class="desc">Simetris 1:1, Ideal untuk Small Office dan UMKM.</div>
+        <hr>
+        <ul>
+          <li>🟡 Up To Speed</li>
+          <li>🟡 Unlimited Data (Tanpa FUP)</li>
+          <li>🟡 Cocok untuk 12 - 30 perangkat</li>
+          <li>🟡 Support IPTV</li>
+        </ul>
+        <div class="price-label">Hanya</div>
+        <div class="price">Rp 300.000<small>/bulan</small></div>
+        <a href="#" class="biz-btn">Pesan Paket Bisnis</a>
+      </div>
+      <div class="biz-card pro">
+        <span class="badge best" style="top:-14px;">ULTIMATE CHOICE</span>
+        <h3>Paket Bisnis PRO</h3>
+        <div class="speed">1<span>Gbps</span></div>
+        <div class="desc">Simetris 1:1, Untuk Corporate dan Instansi Besar.</div>
+        <hr>
+        <ul>
+          <li>🟡 Up To Speed</li>
+          <li>🟡 Unlimited Data (Tanpa FUP)</li>
+          <li>🟡 Cocok untuk 30 - 50 perangkat</li>
+          <li>🟡 Support IPTV</li>
+        </ul>
+        <div class="price-label">Hanya</div>
+        <div class="price">Rp 400.000<small>/bulan</small></div>
+        <a href="#" class="biz-btn solid">HUBUNGI SALES</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container stats-grid reveal">
+    <div class="stat-item"><div class="num" data-target="10000" data-suffix="+">0</div><div class="label">Pelanggan Aktif</div></div>
+    <div class="stat-item"><div class="num" data-target="99.9" data-suffix="%" data-decimal="1">0</div><div class="label">Uptime Jaringan</div></div>
+    <div class="stat-item"><div class="num" data-target="50" data-suffix="+">0</div><div class="label">Titik Layanan</div></div>
+    <div class="stat-item"><div class="num" data-static="24/7">24/7</div><div class="label">Dukungan Teknisi</div></div>
+  </div>
+</section>
+
+<section class="about" id="tentang">
+  <div class="container about-grid reveal">
+    <div>
+      <h2>Tentang <span class="accent">Giga Home</span></h2>
+      <p>Giga Home, didukung oleh <strong>PT Giga Digital Nusantara</strong>, adalah penyedia layanan internet rumah yang berkomitmen menghadirkan koneksi <strong>100% Fiber Optic</strong> dengan harga yang sangat terjangkau.</p>
+      <p>Fokus kami adalah pada stabilitas dan kecepatan tinggi, menggunakan perangkat Dual Band WIFI 5G dan WIFI 6G untuk pengalaman digital terbaik, didukung oleh promo spesial <strong>GRATIS Biaya Pemasangan</strong> di area tertentu. Kami percaya, internet cepat berkualitas harus dapat diakses oleh semua kalangan.</p>
+      <div class="about-chips">
+        <span><b>0%</b> FUP / batasan kuota</span>
+        <span><b>24/7</b> support teknisi</span>
+        <span>Dual Band WIFI 5G/6G</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="glow"></div>
+      <svg viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="95" y1="150" x2="70" y2="30" stroke="#1a1f2b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="130" y1="150" x2="118" y2="14" stroke="#1a1f2b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="190" y1="150" x2="202" y2="14" stroke="#1a1f2b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="225" y1="150" x2="250" y2="30" stroke="#1a1f2b" stroke-width="6" stroke-linecap="round"/>
+        <rect x="55" y="150" width="210" height="70" rx="14" fill="#1a1f2b"/>
+        <rect x="55" y="150" width="210" height="14" rx="7" fill="#2b3446"/>
+        <circle cx="90" cy="185" r="5" fill="#1e6df0"/>
+        <circle cx="108" cy="185" r="5" fill="#4c8dff"/>
+        <circle cx="126" cy="185" r="5" fill="#4c8dff"/>
+        <rect x="150" y="178" width="90" height="14" rx="7" fill="#0e1420"/>
+      </svg>
+      <div class="hero-badge"><span class="ic"></span>Dual Band WIFI 5G/6G</div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="container">
+    <h2>Kenapa Harus Giga Home?</h2>
+    <div class="why-grid reveal">
+      <div class="why-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12c0-2.2 1.8-4 4-4 2.5 0 3.5 4 6 4s4-1.8 4-4-1.8-4-4-4c-2.5 0-3.5 4-6 4-2.2 0-4 1.8-4 4z"/></svg>
+        <h3>Unlimited Kuota Sejati</h3>
+        <p>Tidak ada batasan FUP. Streaming, download, upload sepuasnya 24 jam non-stop.</p>
+      </div>
+      <div class="why-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/></svg>
+        <h3>Jaminan Kestabilan</h3>
+        <p>Didukung multiple backbone dan CDN lokal untuk koneksi yang super stabil dan minim downtime.</p>
+      </div>
+      <div class="why-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+        <h3>Support 24/7 Responsif</h3>
+        <p>Tim teknisi siaga 24 jam, 7 hari seminggu. Penanganan gangguan dengan prioritas tinggi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="container">
+    <h2>Cara Berlangganan</h2>
+    <p>Hanya 4 langkah mudah, internet cepat langsung nyala di rumah Anda.</p>
+    <div class="steps-grid reveal">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <h3>Daftar Online</h3>
+        <p>Isi form pendaftaran atau hubungi tim sales kami langsung.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <h3>Survey Lokasi</h3>
+        <p>Tim teknis mengecek kesiapan jaringan fiber di area Anda.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <h3>Instalasi</h3>
+        <p>Pemasangan router dan kabel fiber oleh teknisi berpengalaman.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <h3>Internet Aktif</h3>
+        <p>Koneksi siap dipakai untuk streaming, kerja, dan gaming.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partners">
+  <div class="container partner-row reveal">
+    <span class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Cisco_logo_blue_2016.svg/1280px-Cisco_logo_blue_2016.svg.png" width="80" alt="Cisco"></span>
+    <span class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Huawei_Standard_logo.svg/3840px-Huawei_Standard_logo.svg.png" width="80" alt="Huawei"></span>
+    <span class="partner-logo"><img src="https://pngimg.com/uploads/google/google_PNG19644.png" width="80" alt="Google"></span>
+    <span class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/MikroTik_logo.svg/1280px-MikroTik_logo.svg.png" width="80" alt="MikroTik"></span>
+    <span class="partner-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Juniper_Networks_logo.svg/960px-Juniper_Networks_logo.svg.png" width="80" alt="Juniper"></span>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="container">
+    <h2>Pertanyaan yang Sering Diajukan</h2>
+    <div class="faq-list reveal" id="faqList">
+      <div class="faq-item">
+        <button class="faq-q">Apakah benar-benar tanpa FUP? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Benar. Semua paket Giga Home tidak memiliki batasan kuota (FUP), kecuali paket promo yang berlaku syarat &amp; ketentuan di area tertentu.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Berapa lama proses instalasi? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Setelah survey lokasi disetujui, instalasi umumnya selesai dalam 1-3 hari kerja tergantung ketersediaan jaringan di area Anda.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Apakah ada kontrak minimal berlangganan? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Tidak ada kontrak minimal untuk paket rumahan. Untuk paket bisnis, ketentuan kontrak mengikuti kesepakatan SLA bersama tim sales.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana jika terjadi gangguan jaringan? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Tim support kami siaga 24/7 dan dapat dihubungi melalui WhatsApp atau email untuk penanganan gangguan dengan prioritas tinggi.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimoni">
+  <div class="container">
+    <h2>Apa Kata Pelanggan Kami?</h2>
+    <div class="testi-carousel reveal">
+      <button class="testi-arrow" id="testiPrev" aria-label="Sebelumnya">&#8249;</button>
+      <div class="testi-track-wrap">
+        <div class="testi-track" id="testiTrack">
+          <div class="testi-slide">
+            <div class="testi-card">
+              <div class="quote">&ldquo;</div>
+              <p>Akhirnya ada ISP yang benar-benar Unlimited tanpa FUP aneh-aneh. Kami pakai Paket Premium untuk game dan download besar. Servis 24/7 juga cepat respon!</p>
+              <div class="name">- Jati Kresna</div>
+              <div class="role">Gamer Profesional, Surabaya</div>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-card">
+              <div class="quote">&ldquo;</div>
+              <p>Sejak pindah ke Giga Home, koneksi kantor kami di rumah jadi jauh lebih stabil. Video call tidak pernah putus lagi walau dipakai bareng seisi rumah.</p>
+              <div class="name">- Dewi Anggraini</div>
+              <div class="role">Karyawan WFH, Semarang</div>
+            </div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-card">
+              <div class="quote">&ldquo;</div>
+              <p>Proses pasang cepat, gratis biaya instalasi, dan tim tekniknya ramah. Harga segini dapat 100 Mbps unlimited itu sangat worth it untuk keluarga kecil kami.</p>
+              <div class="name">- Rahmat Hidayat</div>
+              <div class="role">Wiraswasta, Rembang</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="testi-arrow" id="testiNext" aria-label="Berikutnya">&#8250;</button>
+    </div>
+    <div class="testi-dots" id="testiDots"></div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="container reveal">
+    <h2>Siap Internetan Tanpa Drama?</h2>
+    <p>Daftar sekarang dan nikmati kecepatan Fiber Optic tanpa FUP, mulai dari Rp 100.000/bulan.</p>
+    <div class="hero-cta">
+      <a href="#paket" class="btn-primary">Pilih Paket Sekarang</a>
+      <a href="#" class="btn-ghost">Hubungi Sales</a>
+    </div>
+  </div>
+</section>
+
+<footer id="informasi">
+  <div class="container footer-grid">
+    <div>
+      <h4 class="brand">PT Giga Digital Nusantara</h4>
+      <p>Penyedia layanan internet berkecepatan tinggi dengan fokus pada kestabilan dan kepuasan pelanggan.</p>
+      <div class="footer-note">
+        Nomor Izin Penyelenggara : Internet Service Provider 804/TEL.02.02/2020<br>
+        Izin Jartaplok PS JAR-0332/TEL.04.02/2023
+      </div>
+    </div>
+    <div>
+      <h4>Informasi</h4>
+      <ul>
+        <li><a href="#">Syarat &amp; Ketentuan</a></li>
+        <li><a href="#">Cakupan Area</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Hubungi Kami</h4>
+      <p>✉️ cs@gigahome.id</p>
+      <p>💬 0812 257 070</p>
+      <p>📷 @gigahome_01</p>
+      <h4 style="margin-top:16px;">📍 Lokasi Kami</h4>
+      <p>Desa Jolotundo RT 03 RW 01 Kec Lasem Kab Rembang Jawa Tengah</p>
+      <p>Branch Office : Jl. Jend. Sudirman No.16, Tireman Barat, Tireman, Kec. Rembang, Kabupaten Rembang, Jawa Tengah 59219</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 GIGAHOME. All Rights Reserved.</div>
+</footer>
+
+<script>
+(function(){
+  var track = document.getElementById('testiTrack');
+  var dotsWrap = document.getElementById('testiDots');
+  var slides = track.children;
+  var idx = 0;
+
+  for (var i = 0; i < slides.length; i++) {
+    (function(i){
+      var dot = document.createElement('button');
+      if (i === 0) dot.className = 'active';
+      dot.setAttribute('aria-label', 'Testimoni ' + (i + 1));
+      dot.addEventListener('click', function(){ goTo(i); });
+      dotsWrap.appendChild(dot);
+    })(i);
+  }
+
+  function update(){
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    var dots = dotsWrap.children;
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].classList.toggle('active', j === idx);
+    }
+  }
+
+  function goTo(i){
+    idx = (i + slides.length) % slides.length;
+    update();
+  }
+
+  document.getElementById('testiPrev').addEventListener('click', function(){ goTo(idx - 1); });
+  document.getElementById('testiNext').addEventListener('click', function(){ goTo(idx + 1); });
+
+  var autoplay = setInterval(function(){ goTo(idx + 1); }, 6000);
+  document.querySelector('.testi-carousel').addEventListener('mouseenter', function(){ clearInterval(autoplay); });
+
+  update();
+})();
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    btn.parentElement.classList.toggle('open');
+  });
+});
+
+// Scroll reveal
+var revealEls = document.querySelectorAll('.reveal');
+if ('IntersectionObserver' in window) {
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(function(el){ revealObserver.observe(el); });
+} else {
+  revealEls.forEach(function(el){ el.classList.add('visible'); });
+}
+
+// Stats count-up
+var statNums = document.querySelectorAll('.num[data-target]');
+if (statNums.length && 'IntersectionObserver' in window) {
+  var countObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var target = parseFloat(el.getAttribute('data-target'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var decimals = parseInt(el.getAttribute('data-decimal') || '0', 10);
+      var duration = 1400;
+      var start = null;
+
+      function step(ts){
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = target * eased;
+        el.textContent = (decimals ? current.toFixed(decimals) : Math.round(current).toLocaleString('id-ID')) + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = (decimals ? target.toFixed(decimals) : target.toLocaleString('id-ID')) + suffix;
+        }
+      }
+      requestAnimationFrame(step);
+      countObserver.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  statNums.forEach(function(el){ countObserver.observe(el); });
+}
+
+// Cek Cakupan Area (saat ini baru melayani wilayah Rembang)
+var coverageForm = document.getElementById('coverageForm');
+if (coverageForm) {
+  var coveredKeywords = ['rembang', 'lasem', 'jolotundo', 'tireman', 'sumber', 'sluke', 'sarang', 'kragan', 'pamotan', 'sedan', 'pancur', 'kaliori', 'sulang', 'bulu', 'gunem', 'sale'];
+  coverageForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var input = document.getElementById('coverageInput');
+    var result = document.getElementById('coverageResult');
+    var val = input.value.trim();
+    if (!val) return;
+    var normalized = val.toLowerCase();
+    var isCovered = coveredKeywords.some(function(k){ return normalized.indexOf(k) !== -1; });
+
+    result.className = 'coverage-result pending';
+    result.textContent = 'Mengecek ketersediaan jaringan...';
+    setTimeout(function(){
+      if (isCovered) {
+        result.className = 'coverage-result ok';
+        result.textContent = 'Kabar baik! Area "' + val + '" termasuk jangkauan Giga Home. Tim kami akan menghubungi Anda untuk proses selanjutnya.';
+      } else {
+        result.className = 'coverage-result no';
+        result.textContent = 'Mohon maaf, untuk saat ini layanan Giga Home baru mencakup wilayah Rembang dan sekitarnya. Area "' + val + '" belum termasuk jangkauan kami.';
+      }
+    }, 800);
+  });
+}
+</script>
+</body>
+</html>
