@@ -1,101 +1,390 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page Keren</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        /* Custom CSS untuk styling tambahan */
-        .hero-section {
-            /* Tinggi section minimal, agar selalu memenuhi viewport */
-            min-height: 100vh;
-            /* Pusatkan konten secara vertikal dan horizontal */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Background cover */
-            background-image: url('https://99designs-blog.imgix.net/blog/wp-content/uploads/2018/12/Gradient_builder_2.jpg?auto=format&q=60&w=1815&h=1200&fit=crop&crop=faces'); /* Ganti dengan gambar Anda */
-            background-size: cover;
-            background-position: center;
-            color: white; /* Warna teks putih agar kontras dengan background */
-            text-align: center;
-            position: relative; /* Diperlukan untuk overlay */
-            overflow: hidden; /* Mencegah konten keluar dari section */
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kolekfit — Arsip Administrasi Sekolah</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            
-            z-index: 1; /* Pastikan overlay di bawah konten teks */
-        }
+  :root {
+    --ink: #22261F;
+    --paper: #F5F0E3;
+    --paper-2: #EEE7D4;
+    --forest: #1E3B2E;
+    --forest-dark: #142A20;
+    --manila: #E7CB92;
+    --manila-dark: #C9A968;
+    --rust: #B5502F;
+    --rust-dark: #96401F;
+    --ash: #6E6858;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--paper); color: var(--ink);
+  }
+  .kf-root { max-width: 960px; margin: 0 auto; min-height: 100vh; }
 
-        .hero-content {
-            z-index: 2; /* Pastikan konten teks di atas overlay */
-            padding: 20px;
-        }
+  .kf-header { background: var(--forest); color: var(--paper); padding: 22px 28px 20px; position: relative; }
+  .kf-header::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 8px;
+    background: repeating-linear-gradient(90deg, var(--forest-dark) 0 14px, transparent 14px 28px);
+    opacity: .55;
+  }
+  .kf-title-row { display: flex; align-items: center; gap: 12px; }
+  .kf-seal { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--rust); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+  .kf-title { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 22px; }
+  .kf-tagline { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: #BFD0C4; margin-top: 3px; }
 
-        .hero-content h1 {
-            font-size: 3.5rem; /* Ukuran font lebih besar */
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
+  .kf-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 14px 28px; background: var(--paper-2); border-bottom: 1px solid rgba(0,0,0,.06); font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+  .kf-crumb-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; color: var(--ash); padding: 4px 6px; border-radius: 6px; font-family: inherit; font-size: inherit; }
+  .kf-crumb-btn:hover { background: rgba(0,0,0,.06); color: var(--ink); }
+  .kf-crumb-btn.active { color: var(--forest); font-weight: 600; }
+  .kf-crumb-sep { color: var(--ash); opacity: .6; }
 
-        .hero-content p {
-            font-size: 1.25rem; /* Ukuran font untuk deskripsi */
-            margin-bottom: 30px;
-            max-width: 800px; /* Batasi lebar paragraf */
-            margin-left: auto;
-            margin-right: auto;
-        }
+  .kf-body { padding: 26px 28px 34px; }
+  .kf-section-label { font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; font-size: 11px; letter-spacing: .09em; color: var(--ash); margin: 0 0 14px; }
+  .kf-actions { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+  .kf-btn { display: inline-flex; align-items: center; gap: 7px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 13.5px; padding: 9px 15px; border-radius: 8px; border: none; cursor: pointer; }
+  .kf-btn:active { transform: scale(.97); }
+  .kf-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .kf-btn-primary { background: var(--forest); color: var(--paper); }
+  .kf-btn-primary:hover { background: var(--forest-dark); }
+  .kf-btn-secondary { background: var(--rust); color: #fff; }
+  .kf-btn-secondary:hover { background: var(--rust-dark); }
+  .kf-btn-ghost { background: transparent; color: var(--ash); border: 1px solid rgba(0,0,0,.14); }
+  .kf-btn-ghost:hover { background: rgba(0,0,0,.05); }
 
-        /* Styling untuk tombol */
-        .btn-custom {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px; /* Tombol bulat */
-            font-weight: bold;
-            transition: all 0.3s ease; /* Transisi halus untuk hover */
-        }
+  .kf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px 16px; }
+  .kf-folder { position: relative; background: var(--manila); border-radius: 3px 12px 12px 12px; padding: 30px 16px 16px; cursor: pointer; min-height: 108px; box-shadow: 0 3px 0 rgba(0,0,0,.08), 0 6px 14px rgba(34,38,31,.08); transition: transform .15s ease, box-shadow .15s ease; }
+  .kf-folder:hover { transform: translateY(-3px) rotate(-.4deg); box-shadow: 0 6px 0 rgba(0,0,0,.08), 0 12px 20px rgba(34,38,31,.14); }
+  .kf-folder-tab { position: absolute; top: -10px; left: 14px; background: var(--manila-dark); padding: 4px 12px 5px; border-radius: 5px 5px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--forest-dark); }
+  .kf-folder-icon { font-size: 22px; margin-bottom: 8px; }
+  .kf-folder-name { font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 15.5px; word-break: break-word; }
+  .kf-folder-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--forest-dark); opacity: .7; margin-top: 6px; }
+  .kf-folder-del { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,.55); border: none; border-radius: 6px; padding: 5px 6px; cursor: pointer; opacity: 0; transition: opacity .15s ease; color: var(--rust-dark); font-size: 13px; }
+  .kf-folder:hover .kf-folder-del { opacity: 1; }
 
-        .btn-custom:hover {
-            transform: translateY(-3px); /* Efek sedikit naik saat hover */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
+  .kf-docs { margin-top: 30px; }
+  .kf-doc-row { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid rgba(0,0,0,.07); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .kf-doc-icon { width: 34px; height: 34px; border-radius: 7px; background: var(--paper-2); display: flex; align-items: center; justify-content: center; color: var(--forest); flex-shrink: 0; font-size: 15px; }
+  .kf-doc-name { font-weight: 600; font-size: 14px; }
+  .kf-doc-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ash); margin-top: 2px; }
+  .kf-doc-link { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--forest); text-decoration: none; display: flex; align-items: center; gap: 4px; margin-left: auto; white-space: nowrap; }
+  .kf-doc-del { background: none; border: none; cursor: pointer; color: var(--ash); padding: 6px; border-radius: 6px; flex-shrink: 0; font-size: 14px; }
+  .kf-doc-del:hover { background: rgba(181,80,47,.1); color: var(--rust-dark); }
 
-        /* Media queries untuk responsivitas */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .hero-content p {
-                font-size: 1rem;
-            }
-            .btn-custom {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-        }
-    </style>
+  .kf-empty { text-align: center; padding: 50px 20px; border: 1.5px dashed rgba(0,0,0,.14); border-radius: 14px; color: var(--ash); }
+  .kf-empty-title { font-family: 'Source Serif 4', serif; font-size: 17px; color: var(--ink); margin-bottom: 6px; font-weight: 600; }
+
+  .kf-overlay { position: fixed; inset: 0; background: rgba(20,24,18,.5); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+  .kf-modal { background: var(--paper); border-radius: 14px; width: 100%; max-width: 380px; padding: 22px 22px 20px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+  .kf-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .kf-modal-title { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 17px; }
+  .kf-modal-close { background: none; border: none; cursor: pointer; color: var(--ash); font-size: 18px; }
+  .kf-label { font-size: 12px; color: var(--ash); margin-bottom: 5px; display: block; font-weight: 600; }
+  .kf-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1.5px solid rgba(0,0,0,.15); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; background: #fff; color: var(--ink); margin-bottom: 14px; }
+  .kf-input:focus { outline: none; border-color: var(--forest); }
+  .kf-modal-footer { display: flex; justify-content: flex-end; gap: 8px; }
+  .kf-hint { font-size: 12px; color: var(--ash); margin: -8px 0 14px; }
+
+  .kf-footer { padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(0,0,0,.06); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ash); flex-wrap: wrap; gap: 8px; }
+  .kf-warn { background: #FBEAE3; color: var(--rust-dark); border: 1px solid #EFC7B4; padding: 12px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 18px; }
+  .kf-loading { display: flex; align-items: center; gap: 8px; color: var(--ash); font-size: 13px; }
+  .kf-spin { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
+<div class="kf-root">
+  <div class="kf-header">
+    <div class="kf-title-row">
+      <div class="kf-seal">📁</div>
+      <div>
+        <div class="kf-title">Dokumen Pintar</div>
+        <div class="kf-tagline">Arsip &amp; Administrasi Sekolah</div>
+      </div>
+    </div>
+  </div>
 
-    <section class="hero-section">
-        <div class="container hero-content">
-            <h1 class="display-4">Hallo,  </h1>
-            <p class="lead">
-                Klik pada tombol dibawah untuk melihat contoh project akhir.
-            </p>
-            <a href="landing-page/index.html" class="btn btn-primary">Landing Page</a>
-            <a href="simple-crud/index.html" class="btn btn-primary">Simple CRUD</a>
-        </div>
-    </section>
+  <div class="kf-crumbs" id="crumbs"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <div class="kf-body" id="body">
+    <div class="kf-loading">Memuat arsip…</div>
+  </div>
+
+  <div class="kf-footer">
+    <span id="statusText">Terhubung ke Google Sheet</span>
+    <span>Kolekfit · prototipe</span>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+/* =====================================================================
+   KONFIGURASI — WAJIB DIISI SEBELUM DIPAKAI
+   Paste URL Web App dari Apps Script (Deploy > New deployment > Web app)
+   ===================================================================== */
+const CONFIG = {
+  API_URL: "https://script.google.com/macros/s/AKfycbw-IlecRYBcbGU0-LAvD7G7TXB8CSiGQOtrrTTIApmv-XYLzk5qDYEEbduEeFXhkAf8kA/exec",
+};
+
+// ---------- state ----------
+let folders = [];
+let documents = [];
+let path = [];      // array of folder ids dari root
+let loading = true;
+let apiError = null;
+
+// ---------- api ----------
+async function apiGet() {
+  const res = await fetch(`${CONFIG.API_URL}?action=list`);
+  if (!res.ok) throw new Error("Gagal memuat data dari Sheet");
+  return res.json();
+}
+async function apiPost(payload) {
+  const res = await fetch(CONFIG.API_URL, { method: "POST", body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error("Gagal menyimpan ke Sheet");
+  return res.json();
+}
+
+async function loadAll() {
+  loading = true; apiError = null; render();
+  try {
+    const data = await apiGet();
+    folders = data.folders || [];
+    documents = data.documents || [];
+  } catch (e) {
+    apiError = e.message || "Tidak bisa terhubung ke Google Sheet.";
+  } finally {
+    loading = false; render();
+  }
+}
+
+// ---------- tree helpers ----------
+function children(parentId) {
+  return folders.filter(f => (f.parent_id || "") === parentId);
+}
+function docsOf(folderId) {
+  return documents.filter(d => d.folder_id === folderId);
+}
+function findFolder(id) {
+  return folders.find(f => f.id === id);
+}
+function crumbTrail() {
+  return path.map(id => findFolder(id)).filter(Boolean);
+}
+function iconFor(node) {
+  if (node.kind === "school") return "🏫";
+  if (node.name === "Kepala Sekolah") return "🧑‍💼";
+  if (node.name === "Guru") return "🧑‍🏫";
+  return "🗂️";
+}
+
+// ---------- actions ----------
+async function addSchool(name) {
+  await apiPost({ action: "addSchool", name });
+  await loadAll();
+}
+async function addFolder(parentId, name) {
+  await apiPost({ action: "addFolder", parentId, name });
+  await loadAll();
+}
+async function addDocument(folderId, name, link) {
+  await apiPost({ action: "addDocument", folderId, name, link });
+  await loadAll();
+}
+async function deleteFolder(id) {
+  await apiPost({ action: "deleteFolder", id });
+  if (path.includes(id)) path = path.slice(0, path.indexOf(id));
+  await loadAll();
+}
+async function deleteDocument(id) {
+  await apiPost({ action: "deleteDocument", id });
+  await loadAll();
+}
+
+// ---------- render ----------
+function render() {
+  renderCrumbs();
+  renderBody();
+}
+
+function renderCrumbs() {
+  const el = document.getElementById("crumbs");
+  const trail = crumbTrail();
+  let html = `<button class="kf-crumb-btn ${path.length === 0 ? "active" : ""}" onclick="goTo(-1)">🏠 Beranda</button>`;
+  trail.forEach((f, i) => {
+    html += `<span class="kf-crumb-sep">›</span><button class="kf-crumb-btn ${i === trail.length - 1 ? "active" : ""}" onclick="goTo(${i})">${escapeHtml(f.name)}</button>`;
+  });
+  el.innerHTML = html;
+}
+function goTo(index) {
+  path = index < 0 ? [] : path.slice(0, index + 1);
+  render();
+}
+
+function renderBody() {
+  const el = document.getElementById("body");
+
+  if (loading) {
+    el.innerHTML = `<div class="kf-loading"><span class="kf-spin">⏳</span> Memuat arsip…</div>`;
+    return;
+  }
+  if (apiError) {
+    el.innerHTML = `
+      <div class="kf-warn">
+        <strong>Belum terhubung ke Google Sheet.</strong><br/>
+        ${escapeHtml(apiError)}<br/><br/>
+        Pastikan <code>CONFIG.API_URL</code> di bagian atas file ini sudah diisi dengan URL Web App dari Apps Script,
+        dan deployment-nya diatur "Anyone" pada bagian akses.
+      </div>
+      <button class="kf-btn kf-btn-primary" onclick="loadAll()">🔄 Coba lagi</button>
+    `;
+    return;
+  }
+
+  const currentId = path[path.length - 1] || "";
+  const list = children(currentId);
+  const currentNode = currentId ? findFolder(currentId) : null;
+  const currentDocs = currentId ? docsOf(currentId) : [];
+
+  let html = `<div class="kf-actions">`;
+  if (path.length === 0) {
+    html += `<button class="kf-btn kf-btn-primary" onclick="openModal('school')">🏫 Tambah Sekolah</button>`;
+  } else {
+    html += `<button class="kf-btn kf-btn-primary" onclick="openModal('folder')">🗂️ Tambah Folder</button>`;
+    html += `<button class="kf-btn kf-btn-secondary" onclick="openModal('document')">📄 Tambah Dokumen</button>`;
+  }
+  html += `</div>`;
+
+  html += `<p class="kf-section-label">${path.length === 0 ? `Daftar Sekolah (${list.length})` : `Isi Folder (${list.length} folder · ${currentDocs.length} dokumen)`}</p>`;
+
+  if (list.length === 0 && currentDocs.length === 0) {
+    html += `
+      <div class="kf-empty">
+        <div class="kf-empty-title">${path.length === 0 ? "Belum ada sekolah tercatat" : "Map ini masih kosong"}</div>
+        <div>${path.length === 0 ? "Tambahkan sekolah pertama untuk mulai membuat arsip kepala sekolah dan guru." : "Tambahkan folder atau dokumen untuk mengisi map ini."}</div>
+      </div>`;
+  } else {
+    html += `<div class="kf-grid">`;
+    list.forEach(node => {
+      html += `
+        <div class="kf-folder" onclick="path.push('${node.id}'); render();">
+          <button class="kf-folder-del" onclick="event.stopPropagation(); confirmDeleteFolder('${node.id}', '${escapeHtml(node.name)}')">🗑</button>
+          <div class="kf-folder-tab">${node.kind === "school" ? "Sekolah" : "Map"}</div>
+          <div class="kf-folder-icon">${iconFor(node)}</div>
+          <div class="kf-folder-name">${escapeHtml(node.name)}</div>
+          <div class="kf-folder-meta">${children(node.id).length} folder · ${docsOf(node.id).length} dokumen</div>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (currentId && currentDocs.length > 0) {
+    html += `<div class="kf-docs"><p class="kf-section-label">Dokumen</p>`;
+    currentDocs.forEach(doc => {
+      html += `
+        <div class="kf-doc-row">
+          <div class="kf-doc-icon">📄</div>
+          <div>
+            <div class="kf-doc-name">${escapeHtml(doc.name)}</div>
+            <div class="kf-doc-meta">Ditambahkan ${formatDate(doc.created_at)}</div>
+          </div>
+          <a class="kf-doc-link" href="${escapeAttr(doc.link)}" target="_blank" rel="noreferrer">☁️ Buka link</a>
+          <button class="kf-doc-del" onclick="confirmDeleteDocument('${doc.id}')">🗑</button>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  } catch (e) { return iso || ""; }
+}
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+}
+function escapeAttr(str) { return escapeHtml(str); }
+
+// ---------- modals ----------
+function openModal(type) {
+  const root = document.getElementById("modalRoot");
+  let inner = "";
+  if (type === "school") {
+    inner = `
+      <div class="kf-modal-head"><span class="kf-modal-title">Tambah Sekolah</span><button class="kf-modal-close" onclick="closeModal()">✕</button></div>
+      <label class="kf-label">Nama sekolah</label>
+      <input id="mInput1" class="kf-input" placeholder="mis. SDN 01 Menteng" />
+      <div class="kf-modal-footer">
+        <button class="kf-btn kf-btn-ghost" onclick="closeModal()">Batal</button>
+        <button class="kf-btn kf-btn-primary" id="mSubmit">Simpan</button>
+      </div>`;
+  } else if (type === "folder") {
+    inner = `
+      <div class="kf-modal-head"><span class="kf-modal-title">Tambah Folder</span><button class="kf-modal-close" onclick="closeModal()">✕</button></div>
+      <label class="kf-label">Nama folder</label>
+      <input id="mInput1" class="kf-input" placeholder="mis. Tata Usaha" />
+      <div class="kf-modal-footer">
+        <button class="kf-btn kf-btn-ghost" onclick="closeModal()">Batal</button>
+        <button class="kf-btn kf-btn-primary" id="mSubmit">Simpan</button>
+      </div>`;
+  } else if (type === "document") {
+    inner = `
+      <div class="kf-modal-head"><span class="kf-modal-title">Tambah Dokumen</span><button class="kf-modal-close" onclick="closeModal()">✕</button></div>
+      <label class="kf-label">Nama dokumen</label>
+      <input id="mInput1" class="kf-input" placeholder="mis. SK Kepala Sekolah 2026" />
+      <label class="kf-label">Link Google Drive</label>
+      <input id="mInput2" class="kf-input" placeholder="https://drive.google.com/..." />
+      <p class="kf-hint">Upload file ke Google Drive dulu, atur akses "Anyone with link", lalu tempel link-nya di sini.</p>
+      <div class="kf-modal-footer">
+        <button class="kf-btn kf-btn-ghost" onclick="closeModal()">Batal</button>
+        <button class="kf-btn kf-btn-secondary" id="mSubmit">Simpan Dokumen</button>
+      </div>`;
+  }
+  root.innerHTML = `<div class="kf-overlay" onclick="closeModal(event)"><div class="kf-modal" onclick="event.stopPropagation()">${inner}</div></div>`;
+  document.getElementById("mInput1")?.focus();
+
+  document.getElementById("mSubmit").onclick = async () => {
+    const v1 = document.getElementById("mInput1")?.value.trim();
+    const v2 = document.getElementById("mInput2")?.value.trim();
+    if (!v1) return;
+    const btn = document.getElementById("mSubmit");
+    btn.disabled = true; btn.textContent = "Menyimpan…";
+    try {
+      const currentId = path[path.length - 1] || "";
+      if (type === "school") await addSchool(v1);
+      else if (type === "folder") await addFolder(currentId, v1);
+      else if (type === "document") {
+        if (!v2) { alert("Link dokumen belum diisi."); btn.disabled = false; btn.textContent = "Simpan Dokumen"; return; }
+        await addDocument(currentId, v1, v2);
+      }
+      closeModal();
+    } catch (e) {
+      alert("Gagal menyimpan: " + e.message);
+      btn.disabled = false; btn.textContent = "Simpan";
+    }
+  };
+}
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById("modalRoot").innerHTML = "";
+}
+function confirmDeleteFolder(id, name) {
+  if (confirm(`Hapus "${name}" beserta seluruh isinya? Tindakan ini tidak bisa dibatalkan.`)) deleteFolder(id);
+}
+function confirmDeleteDocument(id) {
+  if (confirm("Hapus dokumen ini?")) deleteDocument(id);
+}
+
+// ---------- init ----------
+loadAll();
+</script>
 </body>
 </html>
