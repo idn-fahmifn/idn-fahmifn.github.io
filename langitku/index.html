@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Langitku — Data Center & Network Solutions</title>
+    <link rel="icon" type="image/png" href="assets/langitku-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy-950: #0b1120;
+        --navy-800: #142136;
+        --navy-700: #1c2c47;
+        --sky-400: #4f9dde;
+        --sky-300: #7fbceb;
+        --amber-500: #f5a623;
+        --amber-400: #f7b84d;
+        --cloud-50: #f5f7fa;
+        --cloud-100: #edf2f7;
+        --slate-300: #8b9dc3;
+        --slate-500: #5d7096;
+        --ink: #0b1120;
+
+        --display: "Space Grotesk", sans-serif;
+        --body: "Inter", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--body);
+        color: var(--ink);
+        background: var(--cloud-50);
+        overflow-x: hidden;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      ul {
+        list-style: none;
+      }
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ---------- NAV ---------- */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 22px 0;
+        transition:
+          background 0.35s ease,
+          padding 0.35s ease,
+          box-shadow 0.35s ease;
+      }
+      .nav.solid {
+        background: rgba(11, 17, 32, 0.92);
+        backdrop-filter: blur(10px);
+        padding: 14px 0;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      }
+      .nav .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #fff;
+      }
+      .logo svg {
+        width: 30px;
+        height: 30px;
+      }
+      .navlinks {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+      }
+      .navlinks a:not(.btn) {
+        color: var(--cloud-100);
+        font-size: 0.94rem;
+        font-weight: 500;
+        position: relative;
+        padding: 4px 0;
+      }
+      .navlinks a:not(.btn)::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background: var(--amber-500);
+        transition: width 0.25s ease;
+      }
+      .navlinks a:not(.btn):hover::after {
+        width: 100%;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 24px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+      .btn-primary {
+        background: var(--amber-500);
+        color: var(--navy-950);
+      }
+      .btn-primary:hover {
+        background: var(--amber-400);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(245, 166, 35, 0.35);
+      }
+      .btn-outline {
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        color: #fff;
+      }
+      .btn-outline:hover {
+        border-color: var(--sky-400);
+        background: rgba(79, 157, 222, 0.1);
+      }
+      .navmenu-toggle {
+        display: none;
+        color: #fff;
+        font-size: 1.6rem;
+      }
+
+      /* ---------- HERO / CAROUSEL ---------- */
+      .hero {
+        position: relative;
+        min-height: 92vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1s ease;
+        display: flex;
+        align-items: center;
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+      }
+
+      .slide[data-mood="dusk"] {
+        background: linear-gradient(
+          180deg,
+          #0b1120 0%,
+          #1c2c47 45%,
+          #3a4e76 75%,
+          #6e7fa3 100%
+        );
+      }
+      .slide[data-mood="deep"] {
+        background: linear-gradient(
+          180deg,
+          #050810 0%,
+          #101a2e 45%,
+          #172846 75%,
+          #26406b 100%
+        );
+      }
+      .slide[data-mood="dawn"] {
+        background: linear-gradient(
+          180deg,
+          #0b1120 0%,
+          #17263f 40%,
+          #2e4a72 70%,
+          #4f7ba8 100%
+        );
+      }
+
+      .stars {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .stars span {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #fff;
+        border-radius: 50%;
+        animation: twinkle 4s ease-in-out infinite;
+      }
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.15;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+
+      .horizon-bands {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 38%;
+        z-index: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.035) 0px,
+          rgba(255, 255, 255, 0.035) 1px,
+          transparent 1px,
+          transparent 34px
+        );
+        mask-image: linear-gradient(to top, black, transparent);
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding-top: 70px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        color: var(--amber-400);
+        text-transform: uppercase;
+        background: rgba(245, 166, 35, 0.1);
+        border: 1px solid rgba(245, 166, 35, 0.3);
+        padding: 6px 14px;
+        border-radius: 30px;
+        margin-bottom: 22px;
+      }
+      .eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--amber-500);
+        animation: pulse 1.6s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .hero-content h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        color: #fff;
+        font-size: clamp(2.2rem, 5vw, 3.6rem);
+        line-height: 1.1;
+        max-width: 720px;
+        margin-bottom: 20px;
+      }
+      .hero-content h1 em {
+        font-style: normal;
+        color: var(--sky-300);
+      }
+      .hero-content p {
+        color: var(--slate-300);
+        font-size: 1.08rem;
+        max-width: 520px;
+        margin-bottom: 34px;
+        line-height: 1.6;
+      }
+      .hero-cta {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .slide-controls {
+        position: absolute;
+        bottom: 36px;
+        left: 0;
+        right: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .dots {
+        display: flex;
+        gap: 10px;
+      }
+      .dots button {
+        width: 34px;
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.25);
+        transition: background 0.3s;
+      }
+      .dots button.active {
+        background: var(--amber-500);
+      }
+
+      .arrow-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.25s;
+      }
+      .arrow-btn:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .arrow-prev {
+        left: 24px;
+      }
+      .arrow-next {
+        right: 24px;
+      }
+      @media (max-width: 720px) {
+        .arrow-btn {
+          display: none;
+        }
+      }
+
+      /* ---------- SERVICES ---------- */
+      .services {
+        position: relative;
+        z-index: 5;
+        margin-top: -64px;
+      }
+      .services .container {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(11, 17, 32, 0.12);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        overflow: hidden;
+      }
+      .service-card {
+        padding: 38px 32px;
+        border-right: 1px solid #eef1f6;
+        transition: background 0.25s;
+      }
+      .service-card:last-child {
+        border-right: none;
+      }
+      .service-card:hover {
+        background: var(--cloud-50);
+      }
+      .service-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background: var(--navy-950);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+      }
+      .service-icon svg {
+        width: 26px;
+        height: 26px;
+        stroke: var(--amber-500);
+      }
+      .service-card h3 {
+        font-family: var(--display);
+        font-size: 1.15rem;
+        margin-bottom: 8px;
+      }
+      .service-card p {
+        color: var(--slate-500);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+      @media (max-width: 860px) {
+        .services .container {
+          grid-template-columns: 1fr;
+          border-radius: 14px;
+        }
+        .service-card {
+          border-right: none;
+          border-bottom: 1px solid #eef1f6;
+        }
+        .service-card:last-child {
+          border-bottom: none;
+        }
+      }
+
+      /* ---------- SECTION GENERIC ---------- */
+      section {
+        padding: 110px 0;
+      }
+      .section-head {
+        text-align: center;
+        max-width: 620px;
+        margin: 0 auto 56px;
+      }
+      .section-tag {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--sky-400);
+        font-weight: 600;
+        margin-bottom: 14px;
+        display: block;
+      }
+      .section-head h2 {
+        font-family: var(--display);
+        font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+        margin-bottom: 14px;
+      }
+      .section-head p {
+        color: var(--slate-500);
+        line-height: 1.6;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ---------- TRUST ---------- */
+      .trust {
+        background: #fff;
+        padding-top: 70px;
+      }
+      .sector-chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 36px;
+      }
+      .sector-chips span {
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        color: var(--navy-700);
+        border: 1px solid #e1e7f0;
+        padding: 10px 20px;
+        border-radius: 30px;
+        background: var(--cloud-50);
+      }
+
+      /* ---------- STATS / WHY US (dark) ---------- */
+      .stats-section {
+        background: var(--navy-950);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .stats-section::before {
+        content: "";
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(
+          circle,
+          rgba(79, 157, 222, 0.18),
+          transparent 70%
+        );
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+        position: relative;
+        z-index: 1;
+      }
+      .stat-card {
+        text-align: center;
+      }
+      .stat-num {
+        font-family: var(--mono);
+        font-size: 2.4rem;
+        font-weight: 600;
+        color: var(--amber-400);
+      }
+      .stat-label {
+        color: var(--slate-300);
+        font-size: 0.88rem;
+        margin-top: 8px;
+      }
+      @media (max-width: 760px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          row-gap: 40px;
+        }
+      }
+
+      /* ---------- LAYERS DIAGRAM ---------- */
+      .layers {
+        background: var(--cloud-50);
+      }
+      .layers-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .layers-copy h2 {
+        font-family: var(--display);
+        font-size: clamp(1.7rem, 3vw, 2.2rem);
+        margin-bottom: 18px;
+      }
+      .layers-copy p {
+        color: var(--slate-500);
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+      .layer-stack {
+        display: flex;
+        flex-direction: column;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(11, 17, 32, 0.1);
+      }
+      .layer {
+        padding: 22px 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 0.88rem;
+        color: #fff;
+      }
+      .layer span.name {
+        font-family: var(--body);
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .layer-1 {
+        background: #4f9dde;
+      }
+      .layer-2 {
+        background: #2e5f92;
+      }
+      .layer-3 {
+        background: #17324f;
+      }
+      .layer-4 {
+        background: #0b1120;
+      }
+      @media (max-width: 900px) {
+        .layers-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- NEWS ---------- */
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .news-card {
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #eef1f6;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .news-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(11, 17, 32, 0.1);
+      }
+      .news-thumb {
+        height: 170px;
+        background: linear-gradient(135deg, var(--navy-800), var(--sky-400));
+      }
+      .news-body {
+        padding: 22px;
+      }
+      .news-meta {
+        font-family: var(--mono);
+        font-size: 0.76rem;
+        color: var(--sky-400);
+        margin-bottom: 10px;
+      }
+      .news-body h3 {
+        font-size: 1.02rem;
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+      .news-body p {
+        color: var(--slate-500);
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+      @media (max-width: 860px) {
+        .news-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- CTA BANNER ---------- */
+      .cta-banner {
+        background: linear-gradient(120deg, var(--navy-950), var(--navy-700));
+        color: #fff;
+        border-radius: 20px;
+        padding: 56px 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+      .cta-banner h2 {
+        font-family: var(--display);
+        font-size: clamp(1.6rem, 3vw, 2.1rem);
+        margin-bottom: 10px;
+      }
+      .cta-banner p {
+        color: var(--slate-300);
+        max-width: 420px;
+      }
+      .cta-phone {
+        font-family: var(--mono);
+        font-size: 1.6rem;
+        color: var(--amber-400);
+        font-weight: 600;
+      }
+
+      /* ---------- FOOTER ---------- */
+      footer {
+        background: var(--navy-950);
+        color: var(--slate-300);
+        padding: 70px 0 30px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 50px;
+        padding-bottom: 44px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .footer-logo {
+        color: #fff;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .footer-grid p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-width: 340px;
+      }
+      .footer-grid h4 {
+        color: #fff;
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+      }
+      .footer-grid ul li {
+        margin-bottom: 10px;
+        font-size: 0.88rem;
+      }
+      .footer-grid ul li a:hover {
+        color: var(--sky-300);
+      }
+      .social-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .social-row a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .social-row a:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .footer-bottom {
+        text-align: center;
+        font-size: 0.82rem;
+        padding-top: 26px;
+        color: var(--slate-500);
+      }
+      @media (max-width: 800px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+          gap: 34px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .navlinks {
+          display: none;
+        }
+        .navmenu-toggle {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav" id="mainNav">
+      <div class="container">
+        <a href="#" class="logo">
+          <img
+            src="langitku.png"
+            alt="Langitku"
+            style="width: 42px; height: 42px; object-fit: contain"
+          />
+          Langitku
+        </a>
+        <ul class="navlinks">
+          <li><a href="#layanan">Layanan</a></li>
+          <li><a href="#datacenter">Data Center</a></li>
+          <li><a href="#jaringan">Jaringan</a></li>
+          <li><a href="#berita">Blog</a></li>
+          <li><a href="#kontak" class="btn btn-primary">Hubungi Kami</a></li>
+        </ul>
+        <button class="navmenu-toggle" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+
+    <header class="hero" id="hero">
+      <div class="slide active" data-mood="dusk">
+        <div class="stars" id="stars-1"></div>
+        <div class="horizon-bands"></div>
+        <div class="container hero-content">
+          <span class="eyebrow"
+            ><span class="dot"></span> Cloud Hosting Solution</span
+          >
+          <h1>
+            Cloud hosting yang <em>selalu di atas</em>, secepat kilat di bawah
+          </h1>
+          <p>
+            Infrastruktur cloud terkelola penuh dengan performa tinggi, aman,
+            dan siap berkembang seiring bisnis Anda — tanpa drama, tanpa
+            downtime.
+          </p>
+          <div class="hero-cta">
+            <a href="#layanan" class="btn btn-primary">Lihat Paket Cloud</a>
+            <a href="#kontak" class="btn btn-outline">Konsultasi Gratis</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" data-mood="deep">
+        <div class="stars" id="stars-2"></div>
+        <div class="horizon-bands"></div>
+        <div class="container hero-content">
+          <span class="eyebrow"
+            ><span class="dot"></span> Data Center Solution</span
+          >
+          <h1>Data center yang menjaga bisnis Anda <em>tetap menyala</em></h1>
+          <p>
+            Colocation dan managed data center dengan redundansi penuh, keamanan
+            berlapis, dan tim operasional yang siaga 24/7.
+          </p>
+          <div class="hero-cta">
+            <a href="#datacenter" class="btn btn-primary"
+              >Jelajahi Data Center</a
+            >
+            <a href="#kontak" class="btn btn-outline">Konsultasi Gratis</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" data-mood="dawn">
+        <div class="stars" id="stars-3"></div>
+        <div class="horizon-bands"></div>
+        <div class="container hero-content">
+          <span class="eyebrow"
+            ><span class="dot"></span> Network Solution</span
+          >
+          <h1>Konektivitas dedicated, <em>secerah langit pagi</em></h1>
+          <p>
+            Internet dedicated dan solusi jaringan enterprise dengan latensi
+            rendah dan uptime yang bisa Anda andalkan setiap hari.
+          </p>
+          <div class="hero-cta">
+            <a href="#jaringan" class="btn btn-primary"
+              >Cek Kecepatan Internet</a
+            >
+            <a href="#kontak" class="btn btn-outline">Konsultasi Gratis</a>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="arrow-btn arrow-prev"
+        id="prevSlide"
+        aria-label="Slide sebelumnya"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M15 18l-6-6 6-6"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button
+        class="arrow-btn arrow-next"
+        id="nextSlide"
+        aria-label="Slide berikutnya"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 18l6-6-6-6"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <div class="slide-controls">
+        <div class="dots" id="dots"></div>
+      </div>
+    </header>
+
+    <section class="services" id="layanan">
+      <div class="container">
+        <div class="service-card">
+          <div class="service-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M7 18a4.5 4.5 0 0 1 .3-9 6 6 0 0 1 11.4-1.8A4 4 0 0 1 18 18H7Z"
+              />
+            </svg>
+          </div>
+          <h3>Cloud Hosting</h3>
+          <p>
+            Managed cloud dengan auto-scaling, backup harian, dan resource yang
+            bisa Anda sesuaikan kapan saja.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="4" y="4" width="16" height="6" rx="1.5" />
+              <rect x="4" y="14" width="16" height="6" rx="1.5" />
+              <circle cx="7.5" cy="7" r=".6" fill="#F5A623" stroke="none" />
+              <circle cx="7.5" cy="17" r=".6" fill="#F5A623" stroke="none" />
+            </svg>
+          </div>
+          <h3>Data Center Colocation</h3>
+          <p>
+            Ruang rack aman dengan daya redundan, pendinginan presisi, dan
+            pengawasan fisik 24 jam penuh.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 12a12 12 0 0 1 16 0" />
+              <path d="M7.5 15.5a7 7 0 0 1 9 0" />
+              <path d="M11 19a2.5 2.5 0 0 1 2 0" />
+            </svg>
+          </div>
+          <h3>Network Solution</h3>
+          <p>
+            Internet dedicated dan jaringan enterprise dengan SLA jelas, latensi
+            rendah, dan dukungan teknis responsif.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">Dipercaya lintas industri</span>
+          <h2>Infrastruktur yang menopang berbagai sektor bisnis</h2>
+          <p>
+            Dari startup yang sedang tumbuh hingga perusahaan berskala nasional,
+            Langitku menjadi lapisan infrastruktur yang bisa diandalkan.
+          </p>
+        </div>
+        <div class="sector-chips reveal">
+          <span>E-Commerce</span>
+          <span>Perbankan &amp; Fintech</span>
+          <span>Manufaktur</span>
+          <span>Logistik</span>
+          <span>Pemerintahan</span>
+          <span>Pendidikan</span>
+          <span>Media &amp; Broadcasting</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="container">
+        <div class="section-head reveal" style="max-width: 680px">
+          <span class="section-tag">Kenapa Langitku</span>
+          <h2 style="color: #fff">Angka yang berbicara soal keandalan</h2>
+          <p>
+            Setiap layer infrastruktur kami dirancang untuk satu tujuan:
+            memastikan bisnis Anda tidak pernah berhenti karena urusan teknis.
+          </p>
+        </div>
+        <div class="stats-grid reveal">
+          <div class="stat-card">
+            <div class="stat-num">99.9%</div>
+            <div class="stat-label">Uptime Terjamin</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Lokasi Data Center</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">&lt;15m</div>
+            <div class="stat-label">Waktu Respons Support</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">Monitoring &amp; NOC</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="layers" id="datacenter">
+      <div class="container layers-wrap">
+        <div class="layers-copy reveal">
+          <span class="section-tag">Arsitektur Langitku</span>
+          <h2>Empat lapisan, satu langit yang sama</h2>
+          <p>
+            Seperti atmosfer yang menopang segalanya di bawahnya, setiap layer
+            infrastruktur kami dibangun untuk saling menguatkan — dari jaringan
+            yang menghubungkan, hingga fondasi data center yang menopang
+            semuanya.
+          </p>
+          <p>
+            Anda tidak perlu memikirkan setiap layer secara terpisah. Cukup
+            fokus pada bisnis Anda, biar Langitku yang menjaga langit tetap
+            cerah.
+          </p>
+          <a href="#kontak" class="btn btn-primary"
+            >Diskusikan Kebutuhan Anda</a
+          >
+        </div>
+        <div class="layer-stack reveal">
+          <div class="layer layer-1">
+            <span class="name">Cloud Layer</span
+            ><span>Compute · Storage · Backup</span>
+          </div>
+          <div class="layer layer-2">
+            <span class="name">Network Layer</span
+            ><span>Dedicated · IP Transit</span>
+          </div>
+          <div class="layer layer-3">
+            <span class="name">Security Layer</span
+            ><span>Firewall · Monitoring</span>
+          </div>
+          <div class="layer layer-4">
+            <span class="name">Data Center Layer</span
+            ><span>Power · Cooling · Rack</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="jaringan" style="background: #fff; padding-top: 0">
+      <div class="container">
+        <div class="cta-banner reveal">
+          <div>
+            <h2>Butuh internet dedicated untuk kantor Anda?</h2>
+            <p>
+              Tim kami siap membantu menghitung kebutuhan bandwidth dan
+              redundansi jaringan yang tepat untuk bisnis Anda.
+            </p>
+          </div>
+          <div style="text-align: right">
+            <div class="cta-phone">021-3900-XXXX</div>
+            <a href="#kontak" class="btn btn-primary" style="margin-top: 14px"
+              >Hubungi Kami</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="berita">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">Cerita &amp; Wawasan</span>
+          <h2>Berita Terbaru dari Langitku</h2>
+          <p>
+            Update seputar infrastruktur, jaringan, dan cloud yang relevan untuk
+            pertumbuhan bisnis Anda.
+          </p>
+        </div>
+        <div class="news-grid reveal">
+          <div class="news-card">
+            <div class="news-thumb"></div>
+            <div class="news-body">
+              <div class="news-meta">01/07/2026 · Data Center</div>
+              <h3>Mengapa Redundansi Daya Menentukan Uptime Bisnis Anda</h3>
+              <p>
+                Kenali bagaimana sistem daya berlapis menjaga layanan Anda tetap
+                berjalan tanpa gangguan.
+              </p>
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-thumb"></div>
+            <div class="news-body">
+              <div class="news-meta">24/06/2026 · Network</div>
+              <h3>
+                Dedicated vs Broadband: Mana yang Cocok untuk Kantor Anda?
+              </h3>
+              <p>
+                Perbandingan jujur soal stabilitas, latensi, dan SLA untuk
+                kebutuhan koneksi bisnis.
+              </p>
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-thumb"></div>
+            <div class="news-body">
+              <div class="news-meta">10/06/2026 · Cloud</div>
+              <h3>5 Tanda Bisnis Anda Sudah Waktunya Migrasi ke Cloud</h3>
+              <p>
+                Panduan singkat mengenali kapan infrastruktur on-premise mulai
+                membatasi pertumbuhan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="kontak">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">
+              <img
+                src="langitku.png"
+                alt="CV Langitku"
+                style="width: 36px; height: 36px; object-fit: contain"
+              />
+              CV Langitku
+            </div>
+            <p>
+              CV Langitku adalah penyedia solusi Cloud, Data Center, dan Network
+              yang mengutamakan keandalan dan kejelasan layanan untuk bisnis
+              Anda.
+            </p>
+            <div class="social-row">
+              <a href="#" aria-label="Facebook">f</a>
+              <a href="#" aria-label="Instagram">ig</a>
+              <a href="#" aria-label="LinkedIn">in</a>
+            </div>
+          </div>
+          <div>
+            <h4>Perusahaan</h4>
+            <ul>
+              <li><a href="#">Tentang Kami</a></li>
+              <li><a href="#layanan">Layanan</a></li>
+              <li><a href="#datacenter">Data Center</a></li>
+              <li><a href="#berita">Blog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Kontak</h4>
+            <ul>
+              <li>021-3900-XXXX</li>
+              <li>halo@langitku.id</li>
+              <li>Jakarta, Indonesia</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          Copyright © 2026 CV Langitku. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Nav solid on scroll
+      const nav = document.getElementById("mainNav");
+      window.addEventListener("scroll", () => {
+        nav.classList.toggle("solid", window.scrollY > 40);
+      });
+
+      // Carousel
+      const slides = document.querySelectorAll(".slide");
+      const dotsWrap = document.getElementById("dots");
+      let current = 0;
+      let timer;
+
+      slides.forEach((_, i) => {
+        const b = document.createElement("button");
+        if (i === 0) b.classList.add("active");
+        b.addEventListener("click", () => goTo(i));
+        dotsWrap.appendChild(b);
+      });
+      const dotEls = dotsWrap.querySelectorAll("button");
+
+      function goTo(i) {
+        slides[current].classList.remove("active");
+        dotEls[current].classList.remove("active");
+        current = (i + slides.length) % slides.length;
+        slides[current].classList.add("active");
+        dotEls[current].classList.add("active");
+        resetTimer();
+      }
+      function next() {
+        goTo(current + 1);
+      }
+      function prev() {
+        goTo(current - 1);
+      }
+      function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 6000);
+      }
+
+      document.getElementById("nextSlide").addEventListener("click", next);
+      document.getElementById("prevSlide").addEventListener("click", prev);
+      resetTimer();
+
+      const hero = document.getElementById("hero");
+      hero.addEventListener("mouseenter", () => clearInterval(timer));
+      hero.addEventListener("mouseleave", resetTimer);
+
+      // Stars
+      ["stars-1", "stars-2", "stars-3"].forEach((id) => {
+        const wrap = document.getElementById(id);
+        for (let i = 0; i < 40; i++) {
+          const s = document.createElement("span");
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = Math.random() * 55 + "%";
+          s.style.animationDelay = Math.random() * 4 + "s";
+          s.style.opacity = Math.random() * 0.6 + 0.2;
+          wrap.appendChild(s);
+        }
+      });
+
+      // Scroll reveal
+      const revealEls = document.querySelectorAll(".reveal");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("in");
+          });
+        },
+        { threshold: 0.15 },
+      );
+      revealEls.forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
