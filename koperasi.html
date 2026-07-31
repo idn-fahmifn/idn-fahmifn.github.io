@@ -1,0 +1,756 @@
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  :root{
+    --ink:#173d2f;
+    --ink-soft:#5c766c;
+    --bg:#f2f7f3;
+    --card:#ffffff;
+    --line:#e0ebe4;
+    --green:#1e7a4d;       /* primary */
+    --green-deep:#155e3b;
+    --green-dark:#0f3d29;
+    --green-soft:#e6f3ec;
+    --green-mint:#d4ede0;
+    --lime:#3ea76a;
+    --amber:#c98a2b;
+    --red:#c0492f;
+    --shadow:0 1px 2px rgba(23,61,47,.04), 0 10px 28px rgba(23,61,47,.07);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Poppins',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+
+  /* ============ LOGIN ============ */
+  #login{position:fixed;inset:0;display:grid;grid-template-columns:1.1fr 1fr;z-index:100;background:var(--bg)}
+  #login .brandside{background:linear-gradient(150deg,var(--green-dark),var(--green) 90%);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  #login .brandside::after{content:"";position:absolute;right:-80px;bottom:-80px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.05)}
+  #login .brandside::before{content:"";position:absolute;right:60px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04)}
+  #login .lgmark{display:flex;align-items:center;gap:12px;font-weight:600;font-size:21px}
+  #login .lgmark .m{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-weight:700;font-size:20px}
+  #login h1{font-size:38px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+  #login .tag{color:#cfe8db;margin-top:14px;font-weight:300;font-size:15px;max-width:380px}
+  #login .stats{display:flex;gap:30px;position:relative;z-index:2}
+  #login .stats b{display:block;font-size:26px;font-weight:600}
+  #login .stats span{color:#bfe0cf;font-size:12.5px;font-weight:300}
+  #login .formside{display:grid;place-items:center;padding:40px}
+  #login .form{width:100%;max-width:340px}
+  #login .form h2{font-size:24px;font-weight:600}
+  #login .form p{color:var(--ink-soft);font-size:14px;margin:6px 0 26px;font-weight:300}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:500;margin-bottom:7px;color:var(--ink)}
+  .field input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14px;background:var(--card);transition:.15s}
+  .field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+  #login .roletoggle{display:flex;gap:8px;margin-bottom:22px}
+  #login .roletoggle button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);border-radius:11px;font-family:inherit;font-weight:500;font-size:13px;color:var(--ink-soft);cursor:pointer;transition:.15s}
+  #login .roletoggle button.on{border-color:var(--green);background:var(--green-soft);color:var(--green-deep)}
+
+  /* ============ TOP + SHELL ============ */
+  .app{display:none}
+  .app.show{display:block}
+  .topbar{display:flex;align-items:center;gap:16px;padding:13px 26px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px}
+  .logo .mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green-dark));display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px}
+  .rolebadge{margin-left:6px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--green-soft);color:var(--green-deep)}
+  .topright{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--ink-soft);position:relative}
+  .iconbtn:hover{border-color:var(--green);color:var(--green)}
+  .iconbtn .badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);color:#fff;border-radius:50%;font-size:9px;display:grid;place-items:center;font-weight:600}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--green-mint);color:var(--green-deep);display:grid;place-items:center;font-weight:600;font-size:13px;cursor:pointer}
+  .logoutlink{font-size:13px;font-weight:500;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:inherit}
+  .logoutlink:hover{color:var(--red)}
+
+  .shell{display:flex;min-height:calc(100vh - 60px)}
+  .side{width:228px;padding:20px 14px;border-right:1px solid var(--line);background:var(--card);flex:none}
+  .side .grp{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin:16px 12px 8px}
+  .nav{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;font-size:14px;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:.15s;margin-bottom:2px}
+  .nav:hover{background:var(--bg);color:var(--ink)}
+  .nav.on{background:var(--green-soft);color:var(--green-deep);font-weight:600}
+  .nav .ic{width:18px;height:18px;flex:none}
+  .nav .cnt{margin-left:auto;font-size:11px;font-weight:600;background:var(--green-mint);color:var(--green-deep);padding:1px 7px;border-radius:10px}
+
+  .main{flex:1;padding:28px 38px;max-width:1120px;width:100%}
+  .page{display:none;animation:fade .32s ease}
+  .page.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .crumb{font-size:12.5px;color:var(--ink-soft);font-weight:300;margin-bottom:4px}
+  h1.title{font-size:26px;font-weight:600;letter-spacing:-.01em}
+  .sub{color:var(--ink-soft);font-size:14px;font-weight:300;margin-top:2px}
+  .hi{color:var(--green)}
+  .pagehead{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+
+  .grid{display:grid;gap:16px;margin-top:22px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1.5fr 1fr}
+  .g2e{grid-template-columns:1fr 1fr}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+  .card.tight{padding:0;overflow:hidden}
+  .stat .lbl{font-size:12.5px;color:var(--ink-soft);font-weight:400;display:flex;align-items:center;gap:8px}
+  .stat .val{font-size:26px;font-weight:600;margin-top:9px;letter-spacing:-.01em}
+  .stat .val small{font-size:14px;color:var(--ink-soft);font-weight:400}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-top:11px}
+  .chip.up{background:var(--green-soft);color:var(--green-deep)}
+  .chip.warn{background:#fbf1e0;color:var(--amber)}
+  .chip.red{background:#fbeae5;color:var(--red)}
+  .dot{width:8px;height:8px;border-radius:50%}
+
+  .shu{background:linear-gradient(125deg,var(--green-dark),var(--green));color:#fff;border:none;position:relative;overflow:hidden}
+  .shu::after{content:"";position:absolute;right:-40px;top:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+  .shu .lbl{color:#cfe8db;font-size:12.5px;font-weight:300}
+  .shu .val{font-size:30px;font-weight:600;margin-top:7px}
+  .shu .note{color:#bfe0cf;font-size:12px;font-weight:300;margin-top:5px}
+  .prog{height:7px;background:rgba(255,255,255,.2);border-radius:20px;margin-top:15px;overflow:hidden}
+  .prog i{display:block;height:100%;background:#8fe0b0;border-radius:20px}
+
+  .row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border:none}
+  .row .tag{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;font-weight:600;font-size:14px}
+  .row .nm{font-size:13.5px;font-weight:600}
+  .row .ds{font-size:11.5px;color:var(--ink-soft);font-weight:300}
+  .row .amt{margin-left:auto;font-weight:600;font-size:15px}
+
+  .miniheader{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .miniheader h3{font-size:16px;font-weight:600}
+  .muted{color:var(--ink-soft);font-size:12.5px;font-weight:300}
+
+  .btn{border:none;font-family:inherit;font-weight:500;font-size:14px;padding:11px 18px;border-radius:11px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn.pri{background:var(--green);color:#fff}
+  .btn.pri:hover{background:var(--green-deep)}
+  .btn.gho{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+  .btn.gho:hover{border-color:var(--green);color:var(--green-deep)}
+  .btn.sm{padding:8px 14px;font-size:13px}
+  .btn.blk{width:100%;justify-content:center}
+  .paybar{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+
+  .kv{display:flex;justify-content:space-between;font-size:13.5px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .kv:last-child{border:none}
+  .kv b{font-weight:600}
+
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;padding:11px 16px;border-bottom:1px solid var(--line);background:var(--bg)}
+  td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--line)}
+  tbody tr:last-child td{border:none}
+  tr.click{cursor:pointer;transition:.12s}
+  tr.click:hover{background:var(--green-soft)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .bal{font-weight:700;color:var(--green-deep)}
+  .neg{color:var(--red)}
+  .ledger-name{font-weight:600}
+  .pill{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--green-soft);color:var(--green-deep);white-space:nowrap}
+  .pill.d{background:#fbf1e0;color:var(--amber)}
+  .pill.dim{background:var(--bg);color:var(--ink-soft)}
+  .status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+  .status.ok{background:var(--green-soft);color:var(--green-deep)}
+  .status.late{background:#fbeae5;color:var(--red)}
+  .status.pend{background:#fbf1e0;color:var(--amber)}
+
+  .tabs{display:flex;gap:2px;margin:20px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .tab{padding:11px 15px;font-size:13.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:.15s}
+  .tab.on{color:var(--green-deep);border-color:var(--green);font-weight:600}
+
+  .segseg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px}
+  .segseg button{border:none;background:transparent;font-family:inherit;font-size:12.5px;font-weight:500;color:var(--ink-soft);padding:6px 14px;border-radius:8px;cursor:pointer}
+  .segseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(23,61,47,.1)}
+
+  .note{margin-top:24px;font-size:12.5px;color:var(--ink-soft);font-weight:300;background:var(--green-soft);border:1px dashed #b8dcc7;border-radius:12px;padding:12px 16px}
+
+  /* payment flow */
+  .steps{display:flex;gap:8px;margin:4px 0 22px}
+  .steps .st{flex:1;text-align:center;font-size:12px;font-weight:500;color:var(--ink-soft);padding-bottom:10px;border-bottom:2px solid var(--line);position:relative}
+  .steps .st.on{color:var(--green-deep);border-color:var(--green)}
+  .steps .st .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--line);color:#fff;font-size:11px;font-weight:600;margin-right:6px}
+  .steps .st.on .n{background:var(--green)}
+  .method{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:12px;cursor:pointer;margin-bottom:10px;transition:.15s}
+  .method:hover{border-color:var(--green)}
+  .method.sel{border-color:var(--green);background:var(--green-soft)}
+  .method .mi{width:40px;height:40px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-weight:600;font-size:13px;color:var(--green-deep);flex:none}
+  .method .radio{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid var(--line)}
+  .method.sel .radio{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff}
+  .success{text-align:center;padding:20px}
+  .success .circle{width:70px;height:70px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;margin:0 auto 16px}
+
+  .barchart{display:flex;align-items:flex-end;gap:10px;height:150px;margin-top:16px;padding:0 4px}
+  .barchart .b{flex:1;background:var(--green-mint);border-radius:6px 6px 0 0;position:relative;transition:.3s}
+  .barchart .b .v{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:var(--ink-soft)}
+  .barchart .b span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--ink-soft)}
+  .barchart .b.hl{background:var(--green)}
+
+  .about-hero{background:linear-gradient(125deg,var(--green-dark),var(--green));color:#fff;border-radius:18px;padding:32px;position:relative;overflow:hidden}
+  .about-hero::after{content:"";position:absolute;right:-60px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .about-hero h2{font-size:24px;font-weight:600}
+  .about-hero p{color:#cfe8db;font-weight:300;margin-top:10px;max-width:560px;font-size:14px}
+  .valgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .valgrid .v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .valgrid .v .vi{width:40px;height:40px;border-radius:11px;background:var(--green-soft);color:var(--green-deep);display:grid;place-items:center;margin-bottom:12px}
+  .valgrid .v h4{font-size:14.5px;font-weight:600}
+  .valgrid .v p{font-size:12.5px;color:var(--ink-soft);font-weight:300;margin-top:4px}
+
+  .profile-head{display:flex;align-items:center;gap:18px}
+  .profile-head .pa{width:72px;height:72px;border-radius:50%;background:var(--green-mint);color:var(--green-deep);display:grid;place-items:center;font-size:26px;font-weight:600}
+
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-dark);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:400;opacity:0;transition:.25s;pointer-events:none;z-index:200}
+
+  @media(max-width:900px){.g4,.g3,.g2,.g2e,.valgrid{grid-template-columns:1fr}.side{display:none}.main{padding:20px}#login{grid-template-columns:1fr}#login .brandside{display:none}}
+</style>
+
+<!-- ================= LOGIN ================= -->
+<div id="login">
+  <div class="brandside">
+    <div class="lgmark"><span class="m">S</span> Koperasi Sejahtera</div>
+    <div>
+      <h1>Kelola simpanan &amp;<br>kredit Anda,<br>dari mana saja.</h1>
+      <p class="tag">Transparan, mudah, dan aman. Pantau simpanan, bayar angsuran, dan lihat SHU Anda dalam satu aplikasi.</p>
+    </div>
+    <div class="stats">
+      <div><b>2.480</b><span>Anggota aktif</span></div>
+      <div><b>Rp 842 jt</b><span>Total aset</span></div>
+      <div><b>18 thn</b><span>Melayani anggota</span></div>
+    </div>
+  </div>
+  <div class="formside">
+    <div class="form">
+      <h2>Masuk ke akun</h2>
+      <p>Pilih peran lalu masuk untuk melanjutkan.</p>
+      <div class="roletoggle">
+        <button id="lgMember" class="on" onclick="pickLoginRole('member')">Anggota</button>
+        <button id="lgAdmin" onclick="pickLoginRole('admin')">Admin</button>
+      </div>
+      <div class="field"><label>No. Anggota / Email</label><input value="AGT-0421" /></div>
+      <div class="field"><label>Kata sandi</label><input type="password" value="••••••••" /></div>
+      <button class="btn pri blk" style="margin-top:6px" onclick="doLogin()">Masuk</button>
+      <p style="text-align:center;margin-top:18px;font-size:12.5px">Lupa kata sandi? <span class="hi" style="cursor:pointer" onclick="toast('Menghubungi admin koperasi…')">Hubungi admin</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="logo"><span class="mark">S</span> Koperasi Sejahtera <span class="rolebadge" id="roleBadge">Anggota</span></div>
+    <div class="topright">
+      <button class="iconbtn" onclick="toast('3 notifikasi baru')" title="Notifikasi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="badge">3</span>
+      </button>
+      <div class="avatar" id="topAv">RA</div>
+      <button class="logoutlink" onclick="logout()">Keluar</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <aside class="side" id="side"></aside>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ---------- ICONS ---------- */
+const I = {
+  home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  wallet:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.4"/>',
+  credit:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  star:'<path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/>',
+  pay:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 15h4"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>',
+  book:'<path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/>',
+  report:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M8 16h5M8 8h8"/>',
+  users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H1a2 2 0 0 1 0-4h.1A1.6 1.6 0 0 0 2.6 7a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H7a1.6 1.6 0 0 0 1-1.5V1a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1a1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V7a1.6 1.6 0 0 0 1.5 1H23a2 2 0 0 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
+};
+const ic = k => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+
+/* ---------- NAV DEFINITIONS ---------- */
+const NAV = {
+  member:[
+    {grp:'Beranda'},
+    {id:'m_dash', ic:'home', t:'Dashboard'},
+    {id:'m_save', ic:'wallet', t:'Simpanan'},
+    {id:'m_credit', ic:'credit', t:'Kredit Saya'},
+    {id:'m_pay', ic:'pay', t:'Bayar'},
+    {id:'m_shu', ic:'star', t:'SHU'},
+    {grp:'Lainnya'},
+    {id:'m_about', ic:'info', t:'Tentang Koperasi'},
+    {id:'m_profile', ic:'user', t:'Profil Saya'},
+  ],
+  admin:[
+    {grp:'Keuangan'},
+    {id:'a_dash', ic:'chart', t:'Ringkasan'},
+    {id:'a_journal', ic:'book', t:'Pembukuan'},
+    {id:'a_report', ic:'report', t:'Laporan'},
+    {grp:'Kelola'},
+    {id:'a_members', ic:'users', t:'Anggota', cnt:'2.480'},
+    {id:'a_settings', ic:'gear', t:'Pengaturan'},
+  ],
+};
+
+let role='member', current='m_dash';
+
+/* ---------- PAGES ---------- */
+const PAGES = {
+  /* ===== MEMBER ===== */
+  m_dash:()=>`
+    <div class="pagehead"><div>
+      <div class="crumb">Beranda</div>
+      <h1 class="title">Halo, <span class="hi">Rina Anjani</span> 👋</h1>
+      <p class="sub">Anggota sejak Maret 2021 · No. AGT-0421</p>
+    </div>
+    <button class="btn pri" onclick="go('m_pay')">Bayar Sekarang</button></div>
+
+    <div class="grid g4">
+      ${stat('Total Simpanan','Rp 12.450.000','up','▲ Rp 250.000 bln ini','var(--green)')}
+      ${stat('Sisa Kredit','Rp 4.200.000','warn','Jatuh tempo 5 Agu','var(--amber)')}
+      ${stat('SHU Berjalan','Rp 1.180.000','up','estimasi 2026','var(--lime)')}
+      ${stat('Angsuran/bln','Rp 700.000','up','6 dari 12 lunas','var(--red)')}
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="miniheader"><h3>Rincian Simpanan</h3><span class="muted" style="cursor:pointer" onclick="go('m_save')">Lihat detail →</span></div>
+        ${saveRow('P','var(--green-soft)','var(--green-deep)','Simpanan Pokok','Setoran awal keanggotaan','Rp 500.000')}
+        ${saveRow('W','#fbf1e0','var(--amber)','Simpanan Wajib','Rp 100.000 × 64 bulan','Rp 6.400.000')}
+        ${saveRow('S','#e7eefc','#3a56b0','Simpanan Sukarela','Bisa ditarik kapan saja','Rp 5.550.000')}
+        <div class="paybar"><button class="btn pri" onclick="go('m_pay')">＋ Setor Simpanan</button><button class="btn gho" onclick="toast('Mengunduh e-statement…')">Unduh Mutasi</button></div>
+      </div>
+      <div class="card shu">
+        <div class="lbl">SHU Berjalan (estimasi 2026)</div>
+        <div class="val">Rp 1.180.000</div>
+        <div class="note">Proporsional terhadap simpanan &amp; partisipasi</div>
+        <div class="prog"><i style="width:64%"></i></div>
+        <div class="note" style="margin-top:8px">64% dari target · dibagikan tiap Maret</div>
+        <button class="btn gho sm" style="margin-top:16px;background:rgba(255,255,255,.15);color:#fff;border:none" onclick="go('m_shu')">Rincian SHU</button>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="card">
+        <div class="miniheader"><h3>Aktivitas Terakhir</h3><span class="muted">7 hari terakhir</span></div>
+        <table><tbody>
+          ${act('28 Jul','Setor simpanan wajib','+ Rp 100.000','ok','Berhasil')}
+          ${act('27 Jul','Bayar angsuran ke-6','− Rp 700.000','ok','Berhasil')}
+          ${act('20 Jul','Setor simpanan sukarela','+ Rp 300.000','ok','Berhasil')}
+          ${act('15 Jul','Estimasi SHU diperbarui','Rp 1.180.000','pend','Info')}
+        </tbody></table>
+      </div>
+    </div>
+    ${protoNote}`,
+
+  m_save:()=>`
+    <div class="crumb">Beranda › Simpanan</div>
+    <h1 class="title">Simpanan Saya</h1>
+    <p class="sub">Total simpanan Rp 12.450.000 · per Juli 2026</p>
+    <div class="grid g3">
+      ${saveCard('Simpanan Pokok','Rp 500.000','Dibayar sekali saat menjadi anggota. Tidak dapat ditarik selama masih menjadi anggota.','var(--green)')}
+      ${saveCard('Simpanan Wajib','Rp 6.400.000','Rp 100.000 setiap bulan. Rutin 64 bulan tanpa tertunggak.','var(--amber)')}
+      ${saveCard('Simpanan Sukarela','Rp 5.550.000','Fleksibel — bisa disetor & ditarik kapan saja sesuai kebutuhan.','#3a56b0')}
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="miniheader"><h3>Pertumbuhan Simpanan</h3><div class="segseg"><button class="on">6 bln</button><button onclick="toast('Menampilkan 1 tahun')">1 thn</button></div></div>
+      <div class="barchart">
+        ${bar('Feb',55)}${bar('Mar',62)}${bar('Apr',68)}${bar('Mei',74)}${bar('Jun',88)}${bar('Jul',100,'Rp12,4jt',true)}
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="miniheader"><h3>Riwayat Transaksi Simpanan</h3><button class="btn gho sm" onclick="toast('Mengunduh PDF…')">Unduh PDF</button></div>
+      <table>
+        <thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th class="num">Jumlah</th><th class="num">Saldo</th></tr></thead>
+        <tbody>
+          <tr><td>28 Jul 2026</td><td><span class="pill d">Wajib</span></td><td>Setoran bulanan</td><td class="num">+100.000</td><td class="num bal">12.450.000</td></tr>
+          <tr><td>20 Jul 2026</td><td><span class="pill dim">Sukarela</span></td><td>Setor tunai</td><td class="num">+300.000</td><td class="num bal">12.350.000</td></tr>
+          <tr><td>28 Jun 2026</td><td><span class="pill d">Wajib</span></td><td>Setoran bulanan</td><td class="num">+100.000</td><td class="num bal">12.050.000</td></tr>
+          <tr><td>10 Jun 2026</td><td><span class="pill dim">Sukarela</span></td><td>Penarikan</td><td class="num neg">−200.000</td><td class="num bal">11.950.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    ${protoNote}`,
+
+  m_credit:()=>`
+    <div class="crumb">Beranda › Kredit</div>
+    <div class="pagehead"><div><h1 class="title">Kredit Saya</h1><p class="sub">Pinjaman Konsumtif · Plafon Rp 8.400.000</p></div>
+    <button class="btn pri" onclick="go('m_pay')">Bayar Angsuran</button></div>
+    <div class="grid g3">
+      ${stat('Sisa Pokok','Rp 4.200.000','warn','50% terbayar','var(--amber)')}
+      ${stat('Angsuran Berikutnya','Rp 700.000','red','Jatuh tempo 5 Agu','var(--red)')}
+      ${stat('Status','Lancar','up','Tanpa tunggakan','var(--green)')}
+    </div>
+    <div class="grid g2e">
+      <div class="card">
+        <div class="miniheader"><h3>Ringkasan Pinjaman</h3></div>
+        <div class="kv"><span>Pokok pinjaman awal</span><b>Rp 8.400.000</b></div>
+        <div class="kv"><span>Tenor</span><b>12 bulan</b></div>
+        <div class="kv"><span>Bunga</span><b>1% / bulan (menurun)</b></div>
+        <div class="kv"><span>Sudah dibayar</span><b>6 angsuran</b></div>
+        <div class="kv"><span>Sisa pokok</span><b>Rp 4.200.000</b></div>
+        <div class="kv"><span>Bunga bulan ini</span><b>Rp 42.000</b></div>
+      </div>
+      <div class="card">
+        <div class="miniheader"><h3>Jadwal Angsuran</h3></div>
+        <table><tbody>
+          ${sched('ke-6','20 Jul',true)}
+          ${sched('ke-7','05 Agu',false,true)}
+          ${sched('ke-8','05 Sep',false)}
+          ${sched('ke-9','05 Okt',false)}
+          ${sched('ke-10','05 Nov',false)}
+        </tbody></table>
+      </div>
+    </div>
+    ${protoNote}`,
+
+  m_pay:()=>`
+    <div class="crumb">Beranda › Bayar</div>
+    <h1 class="title">Bayar Online</h1>
+    <p class="sub">Pilih jenis pembayaran lalu selesaikan dalam 3 langkah</p>
+    <div class="card" style="margin-top:20px;max-width:560px">
+      <div class="steps" id="paySteps">
+        <div class="st on"><span class="n">1</span>Jenis</div>
+        <div class="st"><span class="n">2</span>Metode</div>
+        <div class="st"><span class="n">3</span>Selesai</div>
+      </div>
+      <div id="payBody"></div>
+    </div>
+    ${protoNote}`,
+
+  m_shu:()=>`
+    <div class="crumb">Beranda › SHU</div>
+    <h1 class="title">Sisa Hasil Usaha (SHU)</h1>
+    <p class="sub">Estimasi bagian Anda untuk tahun buku 2026</p>
+    <div class="card shu" style="margin-top:20px">
+      <div class="lbl">Estimasi SHU Anda tahun ini</div>
+      <div class="val" style="font-size:36px">Rp 1.180.000</div>
+      <div class="note">Dihitung proporsional dari simpanan &amp; partisipasi Anda</div>
+      <div class="prog"><i style="width:64%"></i></div>
+      <div class="note" style="margin-top:8px">Realisasi 64% dari proyeksi tahunan · dibagikan Maret 2027</div>
+    </div>
+    <div class="grid g2e">
+      <div class="card">
+        <div class="miniheader"><h3>Dasar Perhitungan</h3></div>
+        <div class="kv"><span>Jasa modal (dari simpanan)</span><b>Rp 810.000</b></div>
+        <div class="kv"><span>Jasa usaha (partisipasi)</span><b>Rp 370.000</b></div>
+        <div class="kv"><span>Total simpanan Anda</span><b>Rp 12.450.000</b></div>
+        <div class="kv"><span>Porsi thd total simpanan koperasi</span><b>1,73%</b></div>
+      </div>
+      <div class="card">
+        <div class="miniheader"><h3>SHU Anda per Tahun</h3></div>
+        <div class="barchart">
+          ${bar('2022',40,'0,7jt')}${bar('2023',55,'0,9jt')}${bar('2024',70,'1,0jt')}${bar('2025',85,'1,1jt')}${bar('2026',95,'1,18jt',true)}
+        </div>
+      </div>
+    </div>
+    ${protoNote}`,
+
+  m_about:()=>`
+    <div class="crumb">Lainnya › Tentang</div>
+    <div class="about-hero">
+      <h2>Koperasi Sejahtera</h2>
+      <p>Berdiri sejak 2008, kami adalah koperasi simpan pinjam yang berlandaskan asas kekeluargaan — dari anggota, oleh anggota, untuk anggota. Kami tumbuh bersama 2.480 anggota aktif.</p>
+    </div>
+    <div class="valgrid">
+      ${val('star','Keanggotaan Terbuka','Terbuka bagi siapa saja yang bersedia mengikuti aturan koperasi.')}
+      ${val('users','Demokratis','Satu anggota, satu suara dalam Rapat Anggota Tahunan.')}
+      ${val('wallet','SHU Adil','Pembagian hasil usaha proporsional terhadap partisipasi.')}
+    </div>
+    <div class="grid g2e" style="margin-top:16px">
+      <div class="card">
+        <div class="miniheader"><h3>Pengurus</h3></div>
+        <div class="row"><div class="tag" style="background:var(--green-soft);color:var(--green-deep)">HS</div><div><div class="nm">H. Suryanto</div><div class="ds">Ketua</div></div></div>
+        <div class="row"><div class="tag" style="background:var(--green-soft);color:var(--green-deep)">MW</div><div><div class="nm">Maria Wijaya</div><div class="ds">Sekretaris</div></div></div>
+        <div class="row"><div class="tag" style="background:var(--green-soft);color:var(--green-deep)">AD</div><div><div class="nm">Ahmad Dahlan</div><div class="ds">Bendahara</div></div></div>
+      </div>
+      <div class="card">
+        <div class="miniheader"><h3>Informasi &amp; Kontak</h3></div>
+        <div class="kv"><span>Badan Hukum</span><b>No. 518/BH/XVI.4</b></div>
+        <div class="kv"><span>Alamat</span><b>Jl. Merdeka No. 45</b></div>
+        <div class="kv"><span>Telepon</span><b>(021) 555-0142</b></div>
+        <div class="kv"><span>Jam layanan</span><b>Sen–Jum, 08.00–16.00</b></div>
+        <button class="btn gho blk" style="margin-top:14px" onclick="toast('Membuka AD/ART koperasi…')">Baca AD/ART Koperasi</button>
+      </div>
+    </div>
+    ${protoNote}`,
+
+  m_profile:()=>`
+    <div class="crumb">Lainnya › Profil</div>
+    <h1 class="title">Profil Saya</h1>
+    <div class="card" style="margin-top:20px">
+      <div class="profile-head">
+        <div class="pa">RA</div>
+        <div><div style="font-size:19px;font-weight:600">Rina Anjani</div><div class="muted">No. Anggota AGT-0421 · Anggota aktif</div>
+        <span class="status ok" style="margin-top:6px;display:inline-block">Keanggotaan Lancar</span></div>
+      </div>
+    </div>
+    <div class="grid g2e">
+      <div class="card"><div class="miniheader"><h3>Data Pribadi</h3><span class="muted" style="cursor:pointer" onclick="toast('Membuka form edit…')">Ubah</span></div>
+        <div class="kv"><span>Nama lengkap</span><b>Rina Anjani</b></div>
+        <div class="kv"><span>Email</span><b>rina.a@email.com</b></div>
+        <div class="kv"><span>Telepon</span><b>0812-3456-7890</b></div>
+        <div class="kv"><span>Bergabung</span><b>Maret 2021</b></div>
+      </div>
+      <div class="card"><div class="miniheader"><h3>Keamanan</h3></div>
+        <button class="btn gho blk" style="margin-bottom:10px" onclick="toast('Membuka ubah kata sandi…')">Ubah Kata Sandi</button>
+        <button class="btn gho blk" onclick="toast('Mengaktifkan verifikasi 2 langkah…')">Aktifkan Verifikasi 2 Langkah</button>
+      </div>
+    </div>
+    ${protoNote}`,
+
+  /* ===== ADMIN ===== */
+  a_dash:()=>`
+    <div class="crumb">Keuangan</div>
+    <div class="pagehead"><div><h1 class="title">Ringkasan Keuangan</h1><p class="sub">Periode berjalan · Juli 2026 · Tutup buku terakhir 30 Jun</p></div>
+    <div class="segseg"><button class="on">Bulan</button><button onclick="toast('Menampilkan data tahunan')">Tahun</button></div></div>
+    <div class="grid g4">
+      ${stat('Total Aset','Rp 842,5<small> jt</small>','up','▲ 4,2% dari Q2','var(--green)')}
+      ${stat('SHU Berjalan','Rp 96,3<small> jt</small>','up','laba positif','var(--lime)')}
+      ${stat('Kas &amp; Bank','Rp 128,0<small> jt</small>','warn','3 menunggu verifikasi','var(--amber)')}
+      ${stat('Kredit Tersalur','Rp 689,5<small> jt</small>','up','96% lancar','var(--red)')}
+    </div>
+    <div class="grid g2">
+      <div class="card"><div class="miniheader"><h3>Arus Kas 6 Bulan</h3><span class="muted">masuk vs keluar</span></div>
+        <div class="barchart">
+          ${bar('Feb',60)}${bar('Mar',72)}${bar('Apr',58)}${bar('Mei',80)}${bar('Jun',66)}${bar('Jul',90,'',true)}
+        </div>
+      </div>
+      <div class="card"><div class="miniheader"><h3>Perlu Tindakan</h3></div>
+        <div class="row"><div class="tag" style="background:#fbf1e0;color:var(--amber)">3</div><div><div class="nm">Verifikasi pembayaran</div><div class="ds">Setoran online menunggu</div></div><button class="btn gho sm" style="margin-left:auto" onclick="toast('Membuka verifikasi…')">Tinjau</button></div>
+        <div class="row"><div class="tag" style="background:#fbeae5;color:var(--red)">2</div><div><div class="nm">Kredit menunggak</div><div class="ds">Perlu penagihan</div></div><button class="btn gho sm" style="margin-left:auto" onclick="go('a_members')">Lihat</button></div>
+        <div class="row"><div class="tag" style="background:var(--green-soft);color:var(--green-deep)">✓</div><div><div class="nm">Neraca seimbang</div><div class="ds">Debit = Kredit</div></div></div>
+      </div>
+    </div>
+    ${adminNote}`,
+
+  a_journal:()=>`
+    <div class="crumb">Keuangan › Pembukuan</div>
+    <div class="pagehead"><div><h1 class="title">Pembukuan</h1><p class="sub">Jurnal &amp; buku besar · alir otomatis ke laporan</p></div>
+    <button class="btn pri" onclick="toast('Membuka form entri jurnal…')">＋ Entri Jurnal</button></div>
+    <div class="tabs" id="bookTabs">
+      <div class="tab on" onclick="bookTab('journal',this)">Jurnal Umum</div>
+      <div class="tab" onclick="bookTab('ledger',this)">Buku Besar</div>
+      <div class="tab" onclick="bookTab('trial',this)">Neraca Saldo</div>
+    </div>
+    <div class="card tight" style="margin-top:16px" id="bookBody"></div>
+    ${adminNote}`,
+
+  a_report:()=>`
+    <div class="crumb">Keuangan › Laporan</div>
+    <div class="pagehead"><div><h1 class="title">Laporan Keuangan</h1><p class="sub">Otomatis tersusun dari buku besar</p></div>
+    <button class="btn gho" onclick="toast('Mengekspor PDF…')">Ekspor PDF</button></div>
+    <div class="tabs" id="repTabs">
+      <div class="tab on" onclick="repTab('neraca',this)">Neraca</div>
+      <div class="tab" onclick="repTab('labarugi',this)">Laba Rugi</div>
+      <div class="tab" onclick="repTab('aruskas',this)">Arus Kas</div>
+    </div>
+    <div class="card tight" style="margin-top:16px" id="repBody"></div>
+    ${adminNote}`,
+
+  a_members:()=>`
+    <div class="crumb">Kelola › Anggota</div>
+    <div class="pagehead"><div><h1 class="title">Anggota</h1><p class="sub">2.480 anggota aktif · 12 menunggak</p></div>
+    <button class="btn pri" onclick="toast('Membuka form anggota baru…')">＋ Anggota Baru</button></div>
+    <div class="grid g3">
+      ${stat('Total Anggota','2.480','up','▲ 34 bulan ini','var(--green)')}
+      ${stat('Total Simpanan','Rp 720,2<small> jt</small>','up','dana anggota','var(--lime)')}
+      ${stat('Menunggak','12','red','perlu penagihan','var(--red)')}
+    </div>
+    <div class="card tight" style="margin-top:16px">
+      <div style="padding:16px 16px 0"><div class="miniheader"><h3>Daftar Anggota</h3><input placeholder="Cari nama / no. anggota…" style="padding:9px 13px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px;width:230px"></div></div>
+      <table>
+        <thead><tr><th>No. Anggota</th><th>Nama</th><th class="num">Simpanan</th><th class="num">Sisa Kredit</th><th>Status</th></tr></thead>
+        <tbody>
+          ${mem('AGT-0421','Rina Anjani','12.450.000','4.200.000','ok','Lancar')}
+          ${mem('AGT-0388','Budi Santoso','8.900.000','0','ok','Lancar')}
+          ${mem('AGT-0512','Siti Rahayu','15.200.000','2.100.000','late','Menunggak')}
+          ${mem('AGT-0299','Ahmad Fauzi','6.750.000','5.800.000','ok','Lancar')}
+          ${mem('AGT-0644','Dewi Lestari','21.000.000','0','ok','Lancar')}
+          ${mem('AGT-0470','Eko Prasetyo','4.300.000','1.200.000','pend','Verifikasi')}
+        </tbody>
+      </table>
+    </div>
+    ${adminNote}`,
+
+  a_settings:()=>`
+    <div class="crumb">Kelola › Pengaturan</div>
+    <h1 class="title">Pengaturan</h1>
+    <p class="sub">Konfigurasi koperasi &amp; pembukuan</p>
+    <div class="grid g2e">
+      <div class="card"><div class="miniheader"><h3>Bagan Akun (COA)</h3></div>
+        <p class="muted" style="margin-bottom:12px">Daftar akun standar sebagai fondasi seluruh pembukuan.</p>
+        <div class="kv"><span>1-100 Kas</span><span class="pill">Aset</span></div>
+        <div class="kv"><span>1-200 Piutang Anggota</span><span class="pill">Aset</span></div>
+        <div class="kv"><span>2-100 Simpanan Anggota</span><span class="pill d">Ekuitas</span></div>
+        <div class="kv"><span>4-100 Pendapatan Bunga</span><span class="pill dim">Pendapatan</span></div>
+        <button class="btn gho blk" style="margin-top:12px" onclick="toast('Membuka editor COA…')">Kelola Akun</button>
+      </div>
+      <div class="card"><div class="miniheader"><h3>Parameter SHU</h3></div>
+        <div class="kv"><span>Jasa modal</span><b>40%</b></div>
+        <div class="kv"><span>Jasa usaha</span><b>25%</b></div>
+        <div class="kv"><span>Dana cadangan</span><b>20%</b></div>
+        <div class="kv"><span>Dana sosial &amp; lain</span><b>15%</b></div>
+        <button class="btn gho blk" style="margin-top:12px" onclick="toast('Membuka pengaturan SHU…')">Ubah Parameter</button>
+      </div>
+    </div>
+    ${adminNote}`,
+};
+
+/* ---------- COMPONENT HELPERS ---------- */
+const protoNote = `<div class="note">💡 Prototype tampilan — angka bersifat contoh. Semua menu &amp; tombol dapat diklik untuk melihat interaksinya.</div>`;
+const adminNote = `<div class="note">💡 Pembukuan mengalir satu arah: <b>Jurnal → Buku Besar → Neraca, Laba Rugi &amp; Arus Kas</b> — tanpa input ganda.</div>`;
+
+function stat(l,v,c,cs,dot){const cls=c==='up'?'up':c==='warn'?'warn':'red';return `<div class="card stat"><div class="lbl"><span class="dot" style="background:${dot}"></span> ${l}</div><div class="val">${v}</div><span class="chip ${cls}">${cs}</span></div>`;}
+function saveRow(t,bg,co,nm,ds,amt){return `<div class="row"><div class="tag" style="background:${bg};color:${co}">${t}</div><div><div class="nm">${nm}</div><div class="ds">${ds}</div></div><div class="amt">${amt}</div></div>`;}
+function saveCard(nm,amt,ds,co){return `<div class="card"><div style="width:40px;height:40px;border-radius:11px;background:var(--green-soft);color:${co};display:grid;place-items:center;font-weight:700;margin-bottom:12px">${nm[9]||'S'}</div><div class="muted">${nm}</div><div style="font-size:22px;font-weight:600;margin:4px 0 8px">${amt}</div><p class="muted" style="font-weight:300">${ds}</p></div>`;}
+function act(d,t,a,s,st){const neg=a.startsWith('−');return `<tr><td>${d}</td><td>${t}</td><td class="num ${neg?'neg':''}" style="${!neg&&a.startsWith('+')?'color:var(--green-deep);font-weight:600':''}">${a}</td><td style="text-align:right"><span class="status ${s}">${st}</span></td></tr>`;}
+function sched(n,d,paid,next){return `<tr><td>Angsuran ${n}</td><td>${d}</td><td style="text-align:right">${paid?'<span class="status ok">Lunas</span>':next?'<span class="status pend">Berikutnya</span>':'<span class="status" style="background:var(--bg);color:var(--ink-soft)">Belum</span>'}</td></tr>`;}
+function bar(lab,h,v='',hl=false){return `<div class="b ${hl?'hl':''}" style="height:${h}%">${v?`<span class="v">${v}</span>`:''}<span>${lab}</span></div>`;}
+function val(i,t,d){return `<div class="v"><div class="vi">${ic(i).replace('class="ic"','width="20" height="20"')}</div><h4>${t}</h4><p>${d}</p></div>`;}
+function mem(no,nm,sav,kr,s,st){return `<tr class="click" onclick="toast('Membuka detail ${nm}…')"><td><b>${no}</b></td><td>${nm}</td><td class="num">${sav}</td><td class="num">${kr==='0'?'—':kr}</td><td><span class="status ${s}">${st}</span></td></tr>`;}
+
+/* ---------- ADMIN SUB-TABS ---------- */
+const BOOK = {
+  journal:`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Akun</th><th class="num">Debit</th><th class="num">Kredit</th></tr></thead><tbody>
+    <tr><td>28 Jul</td><td>Setoran simpanan wajib — R. Anjani</td><td><span class="pill">Kas</span></td><td class="num">100.000</td><td class="num">—</td></tr>
+    <tr><td>28 Jul</td><td style="padding-left:28px" class="muted">Simpanan wajib anggota</td><td><span class="pill d">Ekuitas</span></td><td class="num">—</td><td class="num">100.000</td></tr>
+    <tr><td>27 Jul</td><td>Angsuran kredit — B. Santoso</td><td><span class="pill">Kas</span></td><td class="num">700.000</td><td class="num">—</td></tr>
+    <tr><td>27 Jul</td><td style="padding-left:28px" class="muted">Piutang anggota</td><td><span class="pill dim">Aset</span></td><td class="num">—</td><td class="num">658.000</td></tr>
+    <tr><td>27 Jul</td><td style="padding-left:28px" class="muted">Pendapatan bunga</td><td><span class="pill dim">Pendapatan</span></td><td class="num">—</td><td class="num">42.000</td></tr>
+    <tr><td>25 Jul</td><td>Biaya listrik kantor</td><td><span class="pill d">Beban</span></td><td class="num">340.000</td><td class="num">—</td></tr>
+    </tbody></table>`,
+  ledger:`<div style="padding:14px 16px 0"><div class="miniheader"><h3>Buku Besar — Kas (1-100)</h3><span class="muted">otomatis dari jurnal</span></div></div>
+    <table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Debit</th><th class="num">Kredit</th><th class="num">Saldo</th></tr></thead><tbody>
+    <tr><td>01 Jul</td><td>Saldo awal</td><td class="num">—</td><td class="num">—</td><td class="num bal">127.240.000</td></tr>
+    <tr><td>25 Jul</td><td>Biaya listrik</td><td class="num">—</td><td class="num">340.000</td><td class="num bal">126.900.000</td></tr>
+    <tr><td>27 Jul</td><td>Angsuran — B. Santoso</td><td class="num">700.000</td><td class="num">—</td><td class="num bal">127.600.000</td></tr>
+    <tr><td>28 Jul</td><td>Simpanan wajib — R. Anjani</td><td class="num">100.000</td><td class="num">—</td><td class="num bal">127.700.000</td></tr>
+    <tr><td>30 Jul</td><td>Setoran lain (12 trx)</td><td class="num">300.000</td><td class="num">—</td><td class="num bal">128.000.000</td></tr>
+    </tbody></table>`,
+  trial:`<table><thead><tr><th>Akun</th><th class="num">Debit</th><th class="num">Kredit</th></tr></thead><tbody>
+    <tr><td>Kas &amp; Bank</td><td class="num">128.000.000</td><td class="num">—</td></tr>
+    <tr><td>Piutang Anggota</td><td class="num">689.500.000</td><td class="num">—</td></tr>
+    <tr><td>Aset Tetap</td><td class="num">25.000.000</td><td class="num">—</td></tr>
+    <tr><td>Simpanan Anggota</td><td class="num">—</td><td class="num">720.200.000</td></tr>
+    <tr><td>Dana Cadangan</td><td class="num">—</td><td class="num">26.000.000</td></tr>
+    <tr><td>Pendapatan</td><td class="num">—</td><td class="num">161.200.000</td></tr>
+    <tr><td>Beban</td><td class="num">64.900.000</td><td class="num">—</td></tr>
+    <tr style="border-top:2px solid var(--line)"><td class="bal">Total</td><td class="num bal">907.400.000</td><td class="num bal">907.400.000</td></tr>
+    </tbody></table>`,
+};
+const REP = {
+  neraca:`<div style="padding:14px 16px 0"><div class="miniheader"><h3>Neraca</h3><span class="muted">per 31 Jul 2026</span></div></div>
+    <table><tbody>
+    <tr><td class="ledger-name" colspan="2">ASET</td></tr>
+    <tr><td style="padding-left:28px">Kas &amp; Bank</td><td class="num">128.000.000</td></tr>
+    <tr><td style="padding-left:28px">Piutang anggota (kredit)</td><td class="num">689.500.000</td></tr>
+    <tr><td style="padding-left:28px">Aset tetap</td><td class="num">25.000.000</td></tr>
+    <tr><td class="bal">Total Aset</td><td class="num bal">842.500.000</td></tr>
+    <tr><td class="ledger-name" colspan="2">KEWAJIBAN &amp; EKUITAS</td></tr>
+    <tr><td style="padding-left:28px">Simpanan anggota</td><td class="num">720.200.000</td></tr>
+    <tr><td style="padding-left:28px">Dana cadangan</td><td class="num">26.000.000</td></tr>
+    <tr><td style="padding-left:28px">SHU tahun berjalan</td><td class="num">96.300.000</td></tr>
+    <tr><td class="bal">Total Kewajiban &amp; Ekuitas</td><td class="num bal">842.500.000</td></tr>
+    </tbody></table>`,
+  labarugi:`<div style="padding:14px 16px 0"><div class="miniheader"><h3>Laporan Laba Rugi</h3><span class="muted">Jan–Jul 2026</span></div></div>
+    <table><tbody>
+    <tr><td class="ledger-name" colspan="2">Pendapatan</td></tr>
+    <tr><td style="padding-left:28px">Pendapatan bunga kredit</td><td class="num">142.800.000</td></tr>
+    <tr><td style="padding-left:28px">Pendapatan jasa lain</td><td class="num">18.400.000</td></tr>
+    <tr><td class="ledger-name" colspan="2">Beban</td></tr>
+    <tr><td style="padding-left:28px">Beban operasional</td><td class="num neg">(41.600.000)</td></tr>
+    <tr><td style="padding-left:28px">Beban administrasi</td><td class="num neg">(23.300.000)</td></tr>
+    <tr><td class="bal">SHU sebelum pajak</td><td class="num bal">96.300.000</td></tr>
+    </tbody></table>`,
+  aruskas:`<div style="padding:14px 16px 0"><div class="miniheader"><h3>Laporan Arus Kas</h3><span class="muted">Jan–Jul 2026</span></div></div>
+    <table><tbody>
+    <tr><td class="ledger-name" colspan="2">Aktivitas Operasi</td></tr>
+    <tr><td style="padding-left:28px">Penerimaan angsuran &amp; bunga</td><td class="num">198.000.000</td></tr>
+    <tr><td style="padding-left:28px">Pembayaran beban</td><td class="num neg">(64.900.000)</td></tr>
+    <tr><td class="ledger-name" colspan="2">Aktivitas Pendanaan</td></tr>
+    <tr><td style="padding-left:28px">Setoran simpanan anggota</td><td class="num">86.000.000</td></tr>
+    <tr><td style="padding-left:28px">Penyaluran kredit baru</td><td class="num neg">(210.000.000)</td></tr>
+    <tr><td class="bal">Kenaikan kas bersih</td><td class="num bal">9.100.000</td></tr>
+    </tbody></table>`,
+};
+function bookTab(k,el){document.querySelectorAll('#bookTabs .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById('bookBody').innerHTML=BOOK[k];}
+function repTab(k,el){document.querySelectorAll('#repTabs .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById('repBody').innerHTML=REP[k];}
+
+/* ---------- PAYMENT FLOW ---------- */
+let payState={type:null,method:null};
+const payTypes=[
+  {k:'wajib',t:'Simpanan Wajib',d:'Setoran bulanan Rp 100.000',a:'Rp 100.000'},
+  {k:'sukarela',t:'Simpanan Sukarela',d:'Nominal bebas',a:'Bebas'},
+  {k:'kredit',t:'Angsuran Kredit',d:'Angsuran ke-7 · jatuh tempo 5 Agu',a:'Rp 700.000'},
+];
+const payMethods=[
+  {k:'va',t:'Virtual Account',d:'BCA, Mandiri, BNI, BRI',ini:'VA'},
+  {k:'ewallet',t:'E-Wallet',d:'GoPay, OVO, DANA, ShopeePay',ini:'EW'},
+  {k:'qris',t:'QRIS',d:'Scan dengan aplikasi apa saja',ini:'QR'},
+];
+function renderPay(step){
+  const b=document.getElementById('payBody');
+  const sts=document.querySelectorAll('#paySteps .st');
+  sts.forEach((s,i)=>s.classList.toggle('on',i<=step));
+  if(step===0){
+    b.innerHTML=`<div class="muted" style="margin-bottom:12px">Pilih yang ingin dibayar</div>`+payTypes.map(p=>
+      `<div class="method ${payState.type===p.k?'sel':''}" onclick="payState.type='${p.k}';renderPay(0)">
+        <div class="mi">${p.k==='kredit'?'Kr':'Sp'}</div>
+        <div><div style="font-weight:600;font-size:14px">${p.t}</div><div class="muted">${p.d}</div></div>
+        <div style="margin-left:auto;text-align:right"><div style="font-weight:600;font-size:13px">${p.a}</div></div>
+      </div>`).join('')+
+      `<button class="btn pri blk" style="margin-top:10px" ${payState.type?'':'disabled style="opacity:.5;margin-top:10px"'} onclick="${payState.type?'renderPay(1)':''}">Lanjut</button>`;
+  }else if(step===1){
+    b.innerHTML=`<div class="muted" style="margin-bottom:12px">Pilih metode pembayaran</div>`+payMethods.map(m=>
+      `<div class="method ${payState.method===m.k?'sel':''}" onclick="payState.method='${m.k}';renderPay(1)">
+        <div class="mi">${m.ini}</div>
+        <div><div style="font-weight:600;font-size:14px">${m.t}</div><div class="muted">${m.d}</div></div>
+        <div class="radio"></div>
+      </div>`).join('')+
+      `<div style="display:flex;gap:10px;margin-top:10px"><button class="btn gho" onclick="renderPay(0)">Kembali</button>
+      <button class="btn pri" style="flex:1;justify-content:center" ${payState.method?'':'disabled style="opacity:.5;flex:1;justify-content:center"'} onclick="${payState.method?'renderPay(2)':''}">Bayar Sekarang</button></div>`;
+  }else{
+    b.innerHTML=`<div class="success">
+      <div class="circle"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div style="font-size:19px;font-weight:600">Pembayaran Berhasil</div>
+      <p class="muted" style="margin:6px 0 18px">Saldo Anda telah diperbarui &amp; bukti bayar dikirim ke email.</p>
+      <button class="btn gho sm" onclick="toast('Mengunduh bukti bayar…')">Unduh Bukti Bayar</button>
+      <button class="btn pri sm" onclick="payState={type:null,method:null};go('m_dash')">Kembali ke Dashboard</button>
+    </div>`;
+  }
+}
+
+/* ---------- ROUTER ---------- */
+function renderSide(){
+  document.getElementById('side').innerHTML = NAV[role].map(n=>
+    n.grp?`<div class="grp">${n.grp}</div>`:
+    `<div class="nav ${n.id===current?'on':''}" onclick="go('${n.id}')">${ic(n.ic)} ${n.t}${n.cnt?`<span class="cnt">${n.cnt}</span>`:''}</div>`
+  ).join('');
+}
+function go(id){
+  current=id;
+  document.getElementById('main').innerHTML=`<div class="page show">${PAGES[id]()}</div>`;
+  renderSide();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='m_pay'){payState={type:null,method:null};renderPay(0);}
+  if(id==='a_journal') document.getElementById('bookBody').innerHTML=BOOK.journal;
+  if(id==='a_report') document.getElementById('repBody').innerHTML=REP.neraca;
+}
+
+/* ---------- LOGIN ---------- */
+let loginRole='member';
+function pickLoginRole(r){loginRole=r;document.getElementById('lgMember').classList.toggle('on',r==='member');document.getElementById('lgAdmin').classList.toggle('on',r==='admin');}
+function doLogin(){
+  role=loginRole;
+  current = role==='member'?'m_dash':'a_dash';
+  document.getElementById('roleBadge').textContent = role==='member'?'Anggota':'Admin Keuangan';
+  document.getElementById('topAv').textContent = role==='member'?'RA':'AD';
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('show');
+  renderSide();go(current);
+}
+function logout(){document.getElementById('app').classList.remove('show');document.getElementById('login').style.display='grid';}
+
+/* ---------- TOAST ---------- */
+let tmo;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.opacity=1;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tmo);tmo=setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%) translateY(20px)';},1900);}
+</script>
